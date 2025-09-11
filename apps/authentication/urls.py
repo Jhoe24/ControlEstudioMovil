@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import login_view, registro_view, registration_success, jefe_panel, estudiante_portal, docente_portal, coodinador_panel, administrativo_panel
-
+from .views import error_404_view, error_500_view
 urlpatterns = [
     path('', login_view, name='login_root'),  # /auth/ muestra el login
     path('login/', login_view, name='login'),
@@ -17,4 +17,10 @@ urlpatterns = [
     path('administrativo/panel/', administrativo_panel, name='panel_administrativo'),  # Nuevo endpoint para el panel del personal administrativo
     
     path('jefe/panel/', jefe_panel, name='panel_control_estudio'),  # Nuevo endpoint para el panel del jefe de control de estudios
+
+    path('error/404/', error_404_view, name='error_404'),  # Ruta para probar la página 404
+    path('error/500/', error_500_view, name='error_500'),  # Ruta
 ]
+
+handler404 = 'apps.authentication.views.error_404_view'
+handler500 = 'apps.authentication.views.error_500_view'

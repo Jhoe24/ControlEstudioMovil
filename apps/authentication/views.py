@@ -89,3 +89,10 @@ def administrativo_panel(request):
 
 def jefe_panel(request):
     return render(request, 'control_estudio/panel.html')
+
+
+def error_404_view(request):
+    return render(request, 'error/404.html', status=404)
+
+def error_500_view(request):
+    return render(request, 'error/500.html', status=500)

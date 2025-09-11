@@ -7,5 +7,5 @@ urlpatterns = [
     path('auth/', include('apps.authentication.urls')),
     path('', login_view, name='home'),  # la raíz muestra el login
     
-    
 ]
+
