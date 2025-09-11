@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Bienvenido a Universidad Venezolana!</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Header universitario */
+        .email-header {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .email-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 204, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(207, 33, 46, 0.15) 0%, transparent 50%);
+        }
+
+        .university-logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .university-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .university-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+            position: relative;
+            z-index: 2;
+        }
+
+        .patriotic-banner {
+            height: 8px;
+            background: linear-gradient(to right, #FFCC00 33.33%, #0072CE 33.33%, #0072CE 66.66%, #CF212E 66.66%);
+            width: 100%;
+        }
+
+        /* Contenido principal */
+        .email-content {
+            padding: 40px;
+        }
+
+        .welcome-title {
+            text-align: center;
+            color: #28a745;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .welcome-title i {
+            font-size: 2.2rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .welcome-subtitle {
+            text-align: center;
+            color: #6c757d;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .email-body {
+            color: #34495e;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .email-body p {
+            margin-bottom: 20px;
+        }
+
+        .email-body strong {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        /* Datos del estudiante */
+        .student-data {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.05), rgba(32, 201, 151, 0.05));
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid rgba(40, 167, 69, 0.2);
+            position: relative;
+        }
+
+        .student-data::before {
+            content: '🎓';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #28a745;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .student-data h4 {
+            color: #28a745;
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(40, 167, 69, 0.1);
+        }
+
+        .data-row:last-child {
+            border-bottom: none;
+        }
+
+        .data-label {
+            font-weight: 600;
+            color: #495057;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .data-label i {
+            color: #28a745;
+            width: 20px;
+        }
+
+        .data-value {
+            color: #28a745;
+            font-weight: 600;
+            flex: 1;
+            text-align: right;
+            font-size: 1.05rem;
+        }
+
+        /* Próximos pasos */
+        .next-steps {
+            background: rgba(0, 114, 206, 0.05);
+            border-left: 5px solid #0072CE;
+            padding: 25px;
+            border-radius: 0 12px 12px 0;
+            margin: 30px 0;
+        }
+
+        .next-steps h4 {
+            color: #0072CE;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .steps-list {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .steps-list li {
+            counter-increment: step-counter;
+            margin-bottom: 15px;
+            padding-left: 40px;
+            position: relative;
+            color: #34495e;
+            font-size: 1.05rem;
+        }
+
+        .steps-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #0072CE;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        /* Botón de acceso */
+        .access-button {
+            text-align: center;
+            margin: 40px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.05), rgba(32, 201, 151, 0.05));
+            border-radius: 15px;
+        }
+
+        .access-button h4 {
+            color: #28a745;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .access-button a {
+            display: inline-block;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .access-button a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(40, 167, 69, 0.4);
+        }
+
+        .access-button a i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+
+        /* Información de contacto destacada */
+        .support-box {
+            background: rgba(255, 193, 7, 0.1);
+            border: 2px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .support-box h4 {
+            color: #856404;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .support-contacts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .support-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+        }
+
+        .support-item i {
+            color: #ffc107;
+            font-size: 1.2rem;
+            width: 25px;
+            text-align: center;
+        }
+
+        .support-item a {
+            color: #856404;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .support-item a:hover {
+            color: #0072CE;
+        }
+
+        /* Footer */
+        .email-footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .footer-welcome {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            margin: -30px -40px 30px -40px;
+            padding: 20px 40px;
+            text-align: center;
+        }
+
+        .footer-welcome h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .footer-welcome p {
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+
+        .contact-info h4 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #ecf0f1;
+        }
+
+        .contact-item {
+            display: inline-block;
+            margin: 8px 20px;
+            color: #bdc3c7;
+            font-size: 0.95rem;
+        }
+
+        .contact-item i {
+            margin-right: 8px;
+            color: #28a745;
+        }
+
+        .contact-item a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .contact-item a:hover {
+            color: #FFCC00;
+        }
+
+        .footer-disclaimer {
+            font-size: 0.85rem;
+            color: #95a5a6;
+            line-height: 1.4;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #34495e;
+        }
+
+        .patriotic-footer {
+            height: 5px;
+            background: linear-gradient(to right, #FFCC00 33.33%, #0072CE 33.33%, #0072CE 66.66%, #CF212E 66.66%);
+            width: 100%;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .email-container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .email-header,
+            .email-content,
+            .email-footer {
+                padding: 25px 20px;
+            }
+
+            .welcome-title {
+                font-size: 1.6rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .data-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .data-value {
+                text-align: left;
+            }
+
+            .support-contacts {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-item {
+                display: block;
+                margin: 8px 0;
+            }
+
+            .access-button a {
+                padding: 15px 25px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="email-header">
+            <div class="university-logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1 class="university-name">Universidad Venezolana</h1>
+            <p class="university-subtitle">Excelencia Académica Nacional</p>
+        </div>
+        
+        <div class="patriotic-banner"></div>
+
+        <!-- Contenido -->
+        <div class="email-content">
+            <div class="welcome-title">
+                <i class="fas fa-graduation-cap"></i>
+                <span>¡BIENVENIDO/A!</span>
+            </div>
+            
+            <div class="welcome-subtitle">
+                Tu futuro profesional comienza aquí
+            </div>
+
+            <div class="email-body">
+                <p><strong>¡Felicitaciones y bienvenido/a a la Universidad Venezolana!</strong></p>
+                
+                <p>Nos complace informarte que tu proceso de preinscripción ha sido completado exitosamente. Ahora formas parte de nuestra prestigiosa comunidad académica, donde miles de estudiantes han forjado su futuro profesional.</p>
+
+                <p>Tu compromiso con la excelencia académica te ha traído hasta aquí, y estamos seguros de que juntos lograremos grandes cosas durante tu formación universitaria.</p>
+            </div>
+
+            <!-- Datos del estudiante -->
+            <div class="student-data">
+                <h4><i class="fas fa-user-graduate"></i> Tus Datos de Acceso</h4>
+                <div class="data-row">
+                    <span class="data-label">
+                        <i class="fas fa-user"></i> Nombre Completo:
+                    </span>
+                    <span class="data-value">María José González Rodríguez</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">
+                        <i class="fas fa-id-card"></i> Cédula:
+                    </span>
+                    <span class="data-value">V-28.456.789</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">
+                        <i class="fas fa-envelope"></i> Email Institucional:
+                    </span>
+                    <span class="data-value">maria.gonzalez@estudiante.univ.edu.ve</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">
+                        <i class="fas fa-graduation-cap"></i> Carrera:
+                    </span>
+                    <span class="data-value">Ingeniería en Sistemas</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">
+                        <i class="fas fa-calendar"></i> Período de Ingreso:
+                    </span>
+                    <span class="data-value">2025-I</span>
+                </div>
+            </div>
+
+            <!-- Próximos pasos -->
+            <div class="next-steps">
+                <h4><i class="fas fa-list-check"></i> Tus Próximos Pasos</h4>
+                <ol class="steps-list">
+                    <li><strong>Activar tu cuenta:</strong> Utiliza las credenciales enviadas para acceder al sistema por primera vez.</li>
+                    <li><strong>Completar tu perfil:</strong> Actualiza tu información personal y sube tu fotografía oficial.</li>
+                    <li><strong>Revisar el pensum:</strong> Consulta las materias de tu carrera y los prerrequisitos.</li>
+                    <li><strong>Inscribir materias:</strong> Selecciona las asignaturas para el período 2025-I.</li>
+                    <li><strong>Verificar horarios:</strong> Confirma que no tengas conflictos en tus clases.</li>
+                    <li><strong>Procesar pagos:</strong> Completa el proceso de pago de matrícula y aranceles.</li>
+                </ol>
+            </div>
+
+            <!-- Botón de acceso -->
+            <div class="access-button">
+                <h4><i class="fas fa-rocket"></i> ¡Comienza Tu Experiencia Universitaria!</h4>
+                <a href="https://sistema.universidad.edu.ve/login" target="_blank">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Acceder al Sistema Estudiantil
+                </a>
+                <p style="margin-top: 15px; color: #6c757d; font-size: 0.95rem;">
+                    <i class="fas fa-info-circle"></i> 
+                    Usa tu cédula como usuario y la contraseña temporal enviada por SMS
+                </p>
+            </div>
+
+            <!-- Información de soporte -->
+            <div class="support-box">
+                <h4><i class="fas fa-headset"></i> ¿Necesitas Ayuda?</h4>
+                <p>Nuestro equipo de soporte está disponible para asistirte durante todo el proceso:</p>
+                
+                <div class="support-contacts">
+                    <div class="support-item">
+                        <i class="fab fa-whatsapp"></i>
+                        <a href="https://wa.me/584121234567">WhatsApp: +58 412-123-4567</a>
+                    </div>
+                    <div class="support-item">
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:soporte@universidad.edu.ve">soporte@universidad.edu.ve</a>
+                    </div>
+                    <div class="support-item">
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:+582129876543">Teléfono: (0212) 987-6543</a>
+                    </div>
+                    <div class="support-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Lunes a Viernes: 8:00 AM - 6:00 PM</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="email-body">
+                <p><strong>¡Estamos emocionados de tenerte como parte de nuestra familia universitaria!</strong></p>
+                
+                <p>Recuerda que el éxito académico requiere dedicación, esfuerzo y aprovechamiento de todas las oportunidades que te brindamos. Estamos aquí para apoyarte en cada paso del camino.</p>
+
+                <p style="text-align: center; font-size: 1.1rem; color: #28a745; font-weight: bold; margin-top: 30px;">
+                    🎓 ¡Que tengas una experiencia universitaria extraordinaria! 🎓
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="email-footer">
+            <div class="footer-welcome">
+                <h4><i class="fas fa-heart"></i> ¡Bienvenido/a a la Familia Universitaria!</h4>
+                <p>Comprometidos con tu formación integral y tu futuro profesional</p>
+            </div>
+
+            <div class="contact-info">
+                <h4><i class="fas fa-university"></i> Universidad Venezolana</h4>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:info@universidad.edu.ve">info@universidad.edu.ve</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fab fa-whatsapp"></i>
+                    <a href="https://wa.me/584121234567">+58 412-123-4567</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-globe"></i>
+                    <a href="https://universidad.edu.ve">www.universidad.edu.ve</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Caracas, Venezuela
+                </div>
+            </div>
+
+            <div class="footer-disclaimer">
+                <p><strong>Universidad Venezolana</strong> - Formando líderes para el futuro de Venezuela desde 1970.</p>
+                <p>Este mensaje fue enviado automáticamente. Para consultas específicas, utiliza nuestros canales oficiales de soporte.</p>
+                <p>&copy; 2025 Universidad Venezolana. Todos los derechos reservados.</p>
+            </div>
+        </div>
+        
+        <div class="patriotic-footer"></div>
+    </div>
+</body>
+</html>

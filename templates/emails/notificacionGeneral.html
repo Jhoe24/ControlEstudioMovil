@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificación - Universidad Venezolana</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Header universitario */
+        .email-header {
+            background: linear-gradient(135deg, #0072CE, #1e88e5);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .email-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 204, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(207, 33, 46, 0.1) 0%, transparent 50%);
+        }
+
+        .university-logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .university-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .university-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+            position: relative;
+            z-index: 2;
+        }
+
+        .patriotic-banner {
+            height: 8px;
+            background: linear-gradient(to right, #FFCC00 33.33%, #0072CE 33.33%, #0072CE 66.66%, #CF212E 66.66%);
+            width: 100%;
+        }
+
+        /* Contenido principal */
+        .email-content {
+            padding: 40px;
+        }
+
+        .notification-title {
+            text-align: center;
+            color: #0072CE;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .notification-title i {
+            font-size: 2rem;
+            animation: ring 4s ease-in-out infinite;
+        }
+
+        @keyframes ring {
+            0%, 90%, 100% {
+                transform: rotate(0);
+            }
+            5%, 15%, 25%, 35% {
+                transform: rotate(15deg);
+            }
+            10%, 20%, 30% {
+                transform: rotate(-15deg);
+            }
+        }
+
+        .notification-type {
+            text-align: center;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .notification-type.info {
+            background: linear-gradient(135deg, rgba(0, 114, 206, 0.1), rgba(30, 136, 229, 0.05));
+            color: #0072CE;
+            border: 2px solid rgba(0, 114, 206, 0.2);
+        }
+
+        .notification-type.success {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(32, 201, 151, 0.05));
+            color: #28a745;
+            border: 2px solid rgba(40, 167, 69, 0.2);
+        }
+
+        .notification-type.warning {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 235, 59, 0.05));
+            color: #856404;
+            border: 2px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .notification-type.urgent {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(200, 35, 51, 0.05));
+            color: #dc3545;
+            border: 2px solid rgba(220, 53, 69, 0.3);
+        }
+
+        .email-body {
+            color: #34495e;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .email-body p {
+            margin-bottom: 20px;
+        }
+
+        .email-body strong {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        /* Contenido principal del mensaje */
+        .message-content {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border-left: 5px solid #0072CE;
+            position: relative;
+        }
+
+        .message-content h3 {
+            color: #0072CE;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .message-content .content-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #2c3e50;
+        }
+
+        /* Información importante destacada */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(255, 204, 0, 0.1), rgba(255, 235, 59, 0.05));
+            border: 2px solid rgba(255, 204, 0, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .highlight-box::before {
+            content: '⭐';
+            position: absolute;
+            top: -12px;
+            left: 25px;
+            background: #FFCC00;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 1rem;
+        }
+
+        .highlight-box h4 {
+            color: #856404;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .highlight-box p {
+            color: #6c5300;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        /* Detalles adicionales */
+        .details-section {
+            margin: 30px 0;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .detail-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .detail-card:hover {
+            border-color: #0072CE;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 114, 206, 0.1);
+        }
+
+        .detail-card h5 {
+            color: #0072CE;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-card p {
+            color: #495057;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+
+        .detail-card .detail-value {
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Botón de acción */
+        .action-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, rgba(0, 114, 206, 0.05), rgba(30, 136, 229, 0.03));
+            border-radius: 15px;
+            border: 2px solid rgba(0, 114, 206, 0.1);
+        }
+
+        .action-section h4 {
+            color: #0072CE;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .action-section a {
+            display: inline-block;
+            background: linear-gradient(135deg, #0072CE, #1e88e5);
+            color: white;
+            padding: 16px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 114, 206, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-section a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(0, 114, 206, 0.4);
+        }
+
+        .action-section a i {
+            margin-right: 10px;
+        }
+
+        /* Fechas importantes */
+        .dates-timeline {
+            background: rgba(40, 167, 69, 0.05);
+            border-left: 4px solid #28a745;
+            padding: 25px;
+            border-radius: 0 12px 12px 0;
+            margin: 30px 0;
+        }
+
+        .dates-timeline h4 {
+            color: #28a745;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(40, 167, 69, 0.1);
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .timeline-date {
+            background: #28a745;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .timeline-event {
+            margin-left: 20px;
+            color: #155724;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .email-footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .contact-info h4 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #ecf0f1;
+        }
+
+        .contact-item {
+            display: inline-block;
+            margin: 8px 20px;
+            color: #bdc3c7;
+            font-size: 0.95rem;
+        }
+
+        .contact-item i {
+            margin-right: 8px;
+            color: #0072CE;
+        }
+
+        .contact-item a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .contact-item a:hover {
+            color: #FFCC00;
+        }
+
+        .footer-disclaimer {
+            font-size: 0.85rem;
+            color: #95a5a6;
+            line-height: 1.4;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #34495e;
+        }
+
+        .patriotic-footer {
+            height: 5px;
+            background: linear-gradient(to right, #FFCC00 33.33%, #0072CE 33.33%, #0072CE 66.66%, #CF212E 66.66%);
+            width: 100%;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .email-container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .email-header,
+            .email-content,
+            .email-footer {
+                padding: 25px 20px;
+            }
+
+            .notification-title {
+                font-size: 1.5rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .timeline-event {
+                margin-left: 0;
+            }
+
+            .contact-item {
+                display: block;
+                margin: 8px 0;
+            }
+
+            .action-section a {
+                padding: 14px 25px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="email-header">
+            <div class="university-logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1 class="university-name">Universidad Venezolana</h1>
+            <p class="university-subtitle">Excelencia Académica Nacional</p>
+        </div>
+        
+        <div class="patriotic-banner"></div>
+
+        <!-- Contenido -->
+        <div class="email-content">
+            <div class="notification-title">
+                <i class="fas fa-bell"></i>
+                <span>Notificación Importante</span>
+            </div>
+            
+            <!-- Tipo de notificación -->
+            <div class="notification-type info">
+                <i class="fas fa-info-circle"></i> Información Académica
+            </div>
+
+            <div class="email-body">
+                <p><strong>Estimado/a Estudiante/Usuario,</strong></p>
+                
+                <p>Te informamos sobre una actualización importante en el sistema académico que requiere tu atención.</p>
+            </div>
+
+            <!-- Contenido principal -->
+            <div class="message-content">
+                <h3><i class="fas fa-bookmark"></i> Inicio del Proceso de Inscripciones</h3>
+                <div class="content-text">
+                    <p>Nos complace informarte que ya están <strong>abiertas las inscripciones</strong> para el período académico 2025-I. Todos los estudiantes regulares pueden proceder a inscribir sus materias según su pensum académico.</p>
+                    
+                    <p>Es importante que revises cuidadosamente los prerrequisitos de cada materia y que consultes con tu coordinación académica en caso de dudas sobre tu carga académica.</p>
+                </div>
+            </div>
+
+            <!-- Información destacada -->
+            <div class="highlight-box">
+                <h4><i class="fas fa-star"></i> Información Destacada</h4>
+                <p><strong>Cupos Limitados:</strong> Algunas materias tienen cupos limitados, por lo que recomendamos completar tu inscripción lo antes posible.</p>
+                <p><strong>Horarios Especiales:</strong> Se han habilitado nuevos horarios nocturnos para ciertas materias electivas.</p>
+            </div>
+
+            <!-- Fechas importantes -->
+            <div class="dates-timeline">
+                <h4><i class="fas fa-calendar-alt"></i> Fechas Importantes</h4>
+                <div class="timeline-item">
+                    <div class="timeline-date">09 Sep 2025</div>
+                    <div class="timeline-event">Inicio de inscripciones regulares</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">20 Sep 2025</div>
+                    <div class="timeline-event">Cierre de inscripciones</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">25 Sep 2025</div>
+                    <div class="timeline-event">Publicación de horarios definitivos</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">01 Oct 2025</div>
+                    <div class="timeline-event">Inicio de clases período 2025-I</div>
+                </div>
+            </div>
+
+            <!-- Detalles adicionales -->
+            <div class="details-section">
+                <h4 style="color: #2c3e50; margin-bottom: 20px;"><i class="fas fa-clipboard-list"></i> Detalles del Proceso</h4>
+                <div class="details-grid">
+                    <div class="detail-card">
+                        <h5><i class="fas fa-clock"></i> Horario de Atención</h5>
+                        <p>Lunes a Viernes</p>
+                        <div class="detail-value">8:00 AM - 6:00 PM</div>
+                    </div>
+                    <div class="detail-card">
+                        <h5><i class="fas fa-users"></i> Soporte Disponible</h5>
+                        <p>Chat en línea y WhatsApp</p>
+                        <div class="detail-value">24/7 durante inscripciones</div>
+                    </div>
+                    <div class="detail-card">
+                        <h5><i class="fas fa-credit-card"></i> Métodos de Pago</h5>
+                        <p>Transferencias y tarjetas</p>
+                        <div class="detail-value">Pago móvil disponible</div>
+                    </div>
+                    <div class="detail-card">
+                        <h5><i class="fas fa-file-alt"></i> Documentos</h5>
+                        <p>Certificados médicos actualizados</p>
+                        <div class="detail-value">Requeridos para inscripción</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón de acción -->
+            <div class="action-section">
+                <h4><i class="fas fa-rocket"></i> ¡Procede con tu Inscripción!</h4>
+                <a href="https://sistema.universidad.edu.ve/inscripciones" target="_blank">
+                    <i class="fas fa-edit"></i>
+                    Inscribir Materias Ahora
+                </a>
+                <p style="margin-top: 15px; color: #6c757d; font-size: 0.95rem;">
+                    <i class="fas fa-shield-alt"></i> 
+                    Acceso seguro con tus credenciales institucionales
+                </p>
+            </div>
+
+            <div class="email-body">
+                <p>Si tienes alguna pregunta sobre el proceso de inscripciones o necesitas asistencia técnica, no dudes en contactar a nuestro equipo de soporte.</p>
+
+                <p><strong>¡Te deseamos mucho éxito en el próximo período académico!</strong></p>
+
+                <p style="text-align: center; font-size: 1.1rem; color: #0072CE; font-weight: bold; margin-top: 30px;">
+                    📚 ¡Continúa construyendo tu futuro profesional! 📚
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="email-footer">
+            <div class="contact-info">
+                <h4><i class="fas fa-university"></i> Universidad Venezolana</h4>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:inscripciones@universidad.edu.ve">inscripciones@universidad.edu.ve</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fab fa-whatsapp"></i>
+                    <a href="https://wa.me/584121234567">+58 412-123-4567</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-globe"></i>
+                    <a href="https://universidad.edu.ve">www.universidad.edu.ve</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Caracas, Venezuela
+                </div>
+            </div>
+
+            <div class="footer-disclaimer">
+                <p><strong>Universidad Venezolana</strong> - Comprometidos con la excelencia académica y la formación integral de profesionales.</p>
+                <p>Este es un mensaje informativo del sistema académico. Manténte atento a futuras comunicaciones importantes.</p>
+                <p>&copy; 2025 Universidad Venezolana. Todos los derechos reservados.</p>
+            </div>
+        </div>
+        
+        <div class="patriotic-footer"></div>
+    </div>
+</body>
+</html>

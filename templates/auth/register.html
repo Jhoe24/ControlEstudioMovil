@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="register-container">
+    <div class="university-header">
+        <div class="university-logo">
+            {% load static %}
+            <img src="{% static 'images/icons/icon-512x512.png' %}" alt="Logo Universidad" style="width: 60%; height: 60%;">
+        </div>
+        <h1 class="university-name">UPT "Jose Felix Ribas"</h1>
+        <p class="university-subtitle">Excelencia Académica Nacional</p>
+    </div>
+
+    <div class="patriotic-banner"></div>
+
+    <h2 class="register-title">
+        <i class="fas fa-user-graduate"></i> Registro Estudiantil
+    </h2>
+
+    <div class="preinscription-info">
+        <i class="fas fa-info-circle"></i>
+        <strong>Información importante:</strong> Complete todos los campos del formulario para realizar su preinscripción.<br>
+        Una vez registrado, podrá iniciar sesión con sus datos y acceder al sistema académico para inscribirse en la oferta académica de su interés.
+    </div>
+
+    {% comment %} {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %} {% endcomment %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Completar registro</button>
+    </form>
+
+    <div class="additional-links">
+        <a href="{% url 'login' %}">
+            <i class="fas fa-sign-in-alt"></i> ¿Ya tienes cuenta? Iniciar Sesión
+        </a>
+        <a href="#" onclick="alert('Contacte al departamento de admisiones: admisiones@universidad.edu.ve')">
+            <i class="fas fa-envelope"></i> Contactar Admisiones
+        </a>
+        <a href="#" onclick="alert('Descargue la guía de preinscripción desde nuestro sitio web')">
+            <i class="fas fa-download"></i> Guía de Preinscripción
+        </a>
+    </div>
+</div>
+
+<script>
+    // Efectos de animación al cargar
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.querySelector('.register-container');
+        container.style.opacity = '0';
+        container.style.transform = 'translateY(50px)';
+        
+        setTimeout(() => {
+            container.style.transition = 'all 0.6s ease';
+            container.style.opacity = '1';
+            container.style.transform = 'translateY(0)';
+        }, 100);
+    });
+
+    // Mejorar placeholders y validaciones para campos comunes de Django
+    document.querySelectorAll('form input, form select').forEach(input => {
+        // Placeholders específicos para campos de preinscripción
+        if (input.name === 'cedula' || input.id === 'id_cedula' || input.name === 'username' || input.id === 'id_username') {
+            input.placeholder = 'Ejemplo: V-12345678 o 12345678';
+        }
+        if (input.name === 'first_name' || input.id === 'id_first_name' || input.name === 'nombre' || input.id === 'id_nombre') {
+            input.placeholder = 'Ingrese su nombre';
+        }
+        if (input.name === 'last_name' || input.id === 'id_last_name' || input.name === 'apellido' || input.id === 'id_apellido') {
+            input.placeholder = 'Ingrese su apellido';
+        }
+        if (input.name === 'email' || input.id === 'id_email') {
+            input.placeholder = 'ejemplo@correo.com';
+        }
+        if (input.name === 'telefono' || input.id === 'id_telefono' || input.name === 'phone' || input.id === 'id_phone') {
+            input.placeholder = 'Ejemplo: 0412-1234567';
+        }
+        if (input.name === 'password' || input.id === 'id_password') {
+            input.placeholder = 'Mínimo 8 caracteres';
+        }
+        if (input.name === 'password1' || input.id === 'id_password1') {
+            input.placeholder = 'Ingrese su contraseña';
+        }
+        if (input.name === 'password2' || input.id === 'id_password2') {
+            input.placeholder = 'Confirme su contraseña';
+        }
+        if (input.name === 'fecha_nacimiento' || input.id === 'id_fecha_nacimiento') {
+            input.placeholder = 'dd/mm/aaaa';
+        }
+        if (input.name === 'usuario' || input.id === 'id_usuario' || input.name === 'username' || input.id === 'id_username') {
+            input.placeholder = 'Nombre de usuario';
+        }
+        if(input.name === 'clave' || input.id === 'id_clave' || input.name === 'password' || input.id === 'id_password') {
+            input.placeholder = 'Ingrese su contraseña';
+        }
+
+        // Validación para cédula venezolana
+        if (input.name === 'cedula' || input.id === 'id_cedula') {
+            input.addEventListener('blur', function() {
+                const cedula = this.value.trim();
+                const cedulaRegex = /^[VE]-?\d{7,8}$/i;
+                
+                if (cedula && !cedulaRegex.test(cedula)) {
+                    this.style.borderColor = '#CF212E';
+                    
+                    // Crear mensaje de error si no existe
+                    let errorMsg = this.parentElement.querySelector('.cedula-error');
+                    if (!errorMsg) {
+                        errorMsg = document.createElement('span');
+                        errorMsg.className = 'cedula-error';
+                        errorMsg.style.color = '#CF212E';
+                        errorMsg.style.fontSize = '0.8rem';
+                        errorMsg.style.display = 'block';
+                        errorMsg.style.marginTop = '5px';
+                        errorMsg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Formato: V-12345678 o E-12345678';
+                        this.parentElement.appendChild(errorMsg);
+                    }
+                } else {
+                    this.style.borderColor = '#e1e8ed';
+                    const errorMsg = this.parentElement.querySelector('.cedula-error');
+                    if (errorMsg) {
+                        errorMsg.remove();
+                    }
+                }
+            });
+        }
+
+        // Validación para teléfono venezolano
+        if (input.name === 'telefono' || input.id === 'id_telefono') {
+            input.addEventListener('blur', function() {
+                const telefono = this.value.trim();
+                const telefonoRegex = /^0(412|414|424|416|426|212|241|243|244|245|246|247|248|249|251|252|253|254|255|256|257|258|259|261|262|263|264|265|266|267|268|269|271|272|273|274|275|276|277|278|279|281|282|283|284|285|286|287|288|289|291|292|293|294|295)\d{7}$/;
+                
+                if (telefono && !telefonoRegex.test(telefono.replace(/[-\s]/g, ''))) {
+                    this.style.borderColor = '#CF212E';
+                } else {
+                    this.style.borderColor = '#e1e8ed';
+                }
+            });
+        }
+    });
+
+    // Confirmación antes de enviar el formulario
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const requiredFields = this.querySelectorAll('input[required], select[required]');
+        let allValid = true;
+
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.style.borderColor = '#CF212E';
+                allValid = false;
+            } else {
+                field.style.borderColor = '#e1e8ed';
+            }
+        });
+
+        if (!allValid) {
+            e.preventDefault();
+            alert('Por favor, complete todos los campos requeridos.');
+            return;
+        }
+
+        // Mostrar loading
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+        submitBtn.disabled = true;
+
+        // Restaurar botón si hay errores (se ejecutará después del submit)
+        setTimeout(() => {
+            if (document.querySelector('.errorlist')) {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }, 1000);
+    });
+</script>
+{% endblock %}

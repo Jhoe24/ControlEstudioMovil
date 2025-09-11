@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperación de Contraseña - Universidad Venezolana</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Header universitario con tema de seguridad */
+        .email-header {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .email-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 204, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 114, 206, 0.1) 0%, transparent 50%);
+        }
+
+        .university-logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .university-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .university-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+            position: relative;
+            z-index: 2;
+        }
+
+        .patriotic-banner {
+            height: 8px;
+            background: linear-gradient(to right, #FFCC00 33.33%, #0072CE 33.33%, #0072CE 66.66%, #CF212E 66.66%);
+            width: 100%;
+        }
+
+        /* Contenido principal */
+        .email-content {
+            padding: 40px;
+        }
+
+        .security-title {
+            text-align: center;
+            color: #dc3545;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .security-title i {
+            font-size: 2rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .security-subtitle {
+            text-align: center;
+            color: #6c757d;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .email-body {
+            color: #34495e;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .email-body p {
+            margin-bottom: 20px;
+        }
+
+        .email-body strong {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        /* Alerta de seguridad */
+        .security-alert {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(200, 35, 51, 0.05));
+            border: 2px solid rgba(220, 53, 69, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .security-alert::before {
+            content: '🔐';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #dc3545;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .security-alert h4 {
+            color: #dc3545;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .security-alert p {
+            color: #721c24;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        /* Información del usuario */
+        .user-info {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 2px solid #e9ecef;
+        }
+
+        .user-info h4 {
+            color: #495057;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #495057;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-label i {
+            color: #6c757d;
+            width: 20px;
+        }
+
+        .info-value {
+            color: #dc3545;
+            font-weight: 600;
+            flex: 1;
+            text-align: right;
+        }
+
+        /* Botón de restablecimiento */
+        .reset-button {
+            text-align: center;
+            margin: 40px 0;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.05), rgba(200, 35, 51, 0.03));
+            border-radius: 15px;
+            border: 2px solid rgba(220, 53, 69, 0.1);
+        }
+
+        .reset-button h4 {
+            color: #dc3545;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .reset-button a {
+            display: inline-block;
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .reset-button a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(220, 53, 69, 0.4);
+        }
+
+        .reset-button a i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+
+        .reset-button .expiry-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 193, 7, 0.1);
+            border-radius: 8px;
+            color: #856404;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Instrucciones de seguridad */
+        .security-instructions {
+            background: rgba(0, 114, 206, 0.05);
+            border-left: 5px solid #0072CE;
+            padding: 25px;
+            border-radius: 0 12px 12px 0;
+            margin: 30px 0;
+        }
+
+        .security-instructions h4 {
+            color: #0072CE;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .instructions-list {
+            list-style: none;
+            counter-reset: instruction-counter;
+        }
+
+        .instructions-list li {
+            counter-increment: instruction-counter;
+            margin-bottom: 15px;
+            padding-left: 40px;
+            position: relative;
+            color: #34495e;
+            font-size: 1.05rem;
+        }
+
+        .instructions-list li::before {
+            content: counter(instruction-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #0072CE;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        /* Consejos de seguridad */
+        .security-tips {
+            background: rgba(255, 193, 7, 0.1);
+            border: 2px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .security-tips h4 {
+            color: #856404;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .tip-item {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .tip-item i {
+            color: #ffc107;
+            font-size: 1.1rem;
+            margin-top: 2px;
+            width: 20px;
+        }
+
+        .tip-item span {
+            color: #856404;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .email-footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .footer-security {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            margin: -30px -40px 30px -40px;
+            padding: 20px 40px;
+            text-align: center;
+        }
+
+        .footer-security h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .footer-security p {
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+
+        .contact-info h4 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #ecf0f1;
+        }
+
+        .contact-item {
+            display: inline-block;
+            margin: 8px 20px;
+            color: #bdc3c7;
+            font-size: 0.95rem;
+        }
+
+        .contact-item i {
+            margin-right: 8px;
+            color: #dc3545;
+        }
+
+        .contact-item a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .contact-item a:hover {
+            color: #FFCC00;
+        }
+
+        .footer-disclaimer {
+            font-size: 0.85rem;
+            color: #95a5a6;
+            line-height: 1.4;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #34495e;
+        }
+
+        .patriotic-footer {
+            height: 5px;
+            background: linear-gradient(to right, #FFCC00 33.33%, #0072CE 33.33%, #0072CE 66.66%, #CF212E 66.66%);
+            width: 100%;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .email-container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .email-header,
+            .email-content,
+            .email-footer {
+                padding: 25px 20px;
+            }
+
+            .security-title {
+                font-size: 1.5rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .info-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .info-value {
+                text-align: left;
+            }
+
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-item {
+                display: block;
+                margin: 8px 0;
+            }
+
+            .reset-button a {
+                padding: 15px 25px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="email-header">
+            <div class="university-logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1 class="university-name">Universidad Venezolana</h1>
+            <p class="university-subtitle">Excelencia Académica Nacional</p>
+        </div>
+        
+        <div class="patriotic-banner"></div>
+
+        <!-- Contenido -->
+        <div class="email-content">
+            <div class="security-title">
+                <i class="fas fa-shield-alt"></i>
+                <span>Recuperación de Contraseña</span>
+            </div>
+            
+            <div class="security-subtitle">
+                Restablece tu acceso de forma segura
+            </div>
+
+            <div class="email-body">
+                <p><strong>Estimado/a Usuario/a,</strong></p>
+                
+                <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en el sistema de Universidad Venezolana. Si fuiste tú quien realizó esta solicitud, sigue las instrucciones a continuación.</p>
+
+                <p><strong>Si NO solicitaste este cambio, ignora este email y contacta inmediatamente a soporte.</strong></p>
+            </div>
+
+            <!-- Alerta de seguridad -->
+            <div class="security-alert">
+                <h4><i class="fas fa-exclamation-triangle"></i> Alerta de Seguridad</h4>
+                <p><strong>Esta solicitud expira en 30 minutos por tu seguridad.</strong></p>
+                <p>Solo podrás usar este enlace una vez. Si no completas el proceso, deberás solicitar un nuevo restablecimiento.</p>
+            </div>
+
+            <!-- Información del usuario -->
+            <div class="user-info">
+                <h4><i class="fas fa-user-check"></i> Información de la Solicitud</h4>
+                <div class="info-row">
+                    <span class="info-label">
+                        <i class="fas fa-user"></i> Usuario:
+                    </span>
+                    <span class="info-value">V-12.345.678</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">
+                        <i class="fas fa-envelope"></i> Email:
+                    </span>
+                    <span class="info-value">usuario@email.com</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">
+                        <i class="fas fa-clock"></i> Fecha de Solicitud:
+                    </span>
+                    <span class="info-value">06/09/2025 - 14:30</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">
+                        <i class="fas fa-map-marker-alt"></i> Ubicación:
+                    </span>
+                    <span class="info-value">Caracas, Venezuela</span>
+                </div>
+            </div>
+
+            <!-- Botón de restablecimiento -->
+            <div class="reset-button">
+                <h4><i class="fas fa-key"></i> Restablecer Mi Contraseña</h4>
+                <a href="#" target="_blank">
+                    <i class="fas fa-unlock-alt"></i>
+                    Cambiar Contraseña Ahora
+                </a>
+                <div class="expiry-info">
+                    <i class="fas fa-hourglass-half"></i>
+                    <strong>Este enlace expira en 30 minutos</strong>
+                </div>
+            </div>
+
+            <!-- Instrucciones -->
+            <div class="security-instructions">
+                <h4><i class="fas fa-list-ol"></i> Instrucciones Paso a Paso</h4>
+                <ol class="instructions-list">
+                    <li><strong>Haz clic en el botón</strong> "Cambiar Contraseña Ahora" que está arriba.</li>
+                    <li><strong>Serás redirigido</strong> a una página segura de la universidad.</li>
+                    <li><strong>Ingresa tu nueva contraseña</strong> (mínimo 8 caracteres, incluye mayúsculas, minúsculas y números).</li>
+                    <li><strong>Confirma la nueva contraseña</strong> escribiéndola nuevamente.</li>
+                    <li><strong>Guarda los cambios</strong> y podrás acceder inmediatamente al sistema.</li>
+                </ol>
+            </div>
+
+            <!-- Consejos de seguridad -->
+            <div class="security-tips">
+                <h4><i class="fas fa-lightbulb"></i> Consejos de Seguridad</h4>
+                <div class="tips-grid">
+                    <div class="tip-item">
+                        <i class="fas fa-lock"></i>
+                        <span><strong>Contraseña fuerte:</strong> Usa al menos 8 caracteres con mayúsculas, minúsculas, números y símbolos.</span>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-eye-slash"></i>
+                        <span><strong>Mantén la privacidad:</strong> Nunca compartas tu contraseña con otras personas.</span>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-sync-alt"></i>
+                        <span><strong>Cambia regularmente:</strong> Actualiza tu contraseña cada 3-6 meses.</span>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-wifi"></i>
+                        <span><strong>Red segura:</strong> Siempre accede desde redes confiables y nunca desde WiFi público.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="email-body">
+                <p><strong>¿No solicitaste este cambio?</strong></p>
+                <p>Si no fuiste tú quien solicitó restablecer la contraseña, tu cuenta podría estar en riesgo. Contacta inmediatamente a nuestro equipo de soporte técnico.</p>
+
+                <p style="text-align: center; font-size: 1.1rem; color: #dc3545; font-weight: bold; margin-top: 30px;">
+                    🔐 Tu seguridad es nuestra prioridad 🔐
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="email-footer">
+            <div class="footer-security">
+                <h4><i class="fas fa-shield-alt"></i> Departamento de Seguridad Informática</h4>
+                <p>Protegiendo tu información académica las 24 horas</p>
+            </div>
+
+            <div class="contact-info">
+                <h4><i class="fas fa-headset"></i> Soporte de Emergencia</h4>
+                <div class="contact-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <a href="tel:+582129876543">Línea Directa: (0212) 987-6543</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fab fa-whatsapp"></i>
+                    <a href="https://wa.me/584121234567">WhatsApp: +58 412-123-4567</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:seguridad@universidad.edu.ve">seguridad@universidad.edu.ve</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-clock"></i>
+                    Disponible 24/7 para emergencias
+                </div>
+            </div>
+
+            <div class="footer-disclaimer">
+                <p><strong>Universidad Venezolana - Departamento de Seguridad Informática</strong></p>
+                <p>Este email contiene información confidencial. Si lo recibiste por error, elimínalo inmediatamente y contacta al remitente.</p>
+                <p>Por tu seguridad, nunca ingreses tus credenciales desde enlaces de emails sospechosos.</p>
+                <p>&copy; 2025 Universidad Venezolana. Todos los derechos reservados.</p>
+            </div>
+        </div>
+        
+        <div class="patriotic-footer"></div>
+    </div>
+</body>
+</html>

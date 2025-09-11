@@ -1,0 +1,548 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+{% load static %}
+<style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  background-image: url("{% static "images/img/logo.jpg" %}");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow-x: hidden;
+  padding: 20px 0;
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(
+      circle at 20% 80%,
+      rgba(255, 204, 0, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(0, 114, 206, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 40%,
+      rgba(207, 33, 46, 0.1) 0%,
+      transparent 50%
+    );
+}
+
+.register-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  width: 100%;
+  max-width: 700px;
+  padding: 40px;
+  position: relative;
+  z-index: 1;
+  margin: 20px;
+}
+
+.university-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.university-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: white;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.university-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 5px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.university-subtitle {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  font-weight: 300;
+}
+
+.patriotic-banner {
+  height: 5px;
+  background: linear-gradient(
+    to right,
+    #ffcc00 33.33%,
+    #0072ce 33.33%,
+    #0072ce 66.66%,
+    #cf212e 66.66%
+  );
+  border-radius: 3px;
+  margin: 25px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.register-title {
+  text-align: center;
+  color: #2c3e50;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.success-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(39, 174, 96, 0.1));
+  border-radius: 15px;
+  border: 2px solid rgba(46, 204, 113, 0.3);
+}
+
+.success-icon {
+  font-size: 3rem;
+  color: #27ae60;
+  margin-bottom: 15px;
+}
+
+.success-title {
+  color: #27ae60;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.success-subtitle {
+  color: #2c3e50;
+  font-size: 1rem;
+}
+
+.preinscription-info {
+  background: linear-gradient(
+    135deg,
+    rgba(207, 33, 46, 0.1),
+    rgba(255, 204, 0, 0.1)
+  );
+  border-left: 4px solid #cf212e;
+  padding: 20px;
+  margin-bottom: 30px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #2c3e50;
+}
+
+.preinscription-info i {
+  color: #cf212e;
+  margin-right: 8px;
+  font-size: 1.1rem;
+}
+
+.preinscription-info strong {
+  color: #cf212e;
+  font-weight: 600;
+}
+
+.info-section {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 114, 206, 0.1),
+    rgba(255, 204, 0, 0.05)
+  );
+  border-left: 4px solid #0072ce;
+  padding: 25px;
+  margin-bottom: 25px;
+  border-radius: 12px;
+  position: relative;
+}
+
+.info-section h3 {
+  color: #0072ce;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.info-section h3 i {
+  margin-right: 10px;
+  font-size: 1.4rem;
+}
+
+.date-highlight {
+  background: rgba(0, 114, 206, 0.15);
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin: 15px 0;
+  border-left: 3px solid #0072ce;
+}
+
+.date-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.location-text {
+  color: #7f8c8d;
+  font-size: 0.95rem;
+}
+
+.documents-section {
+  margin-top: 20px;
+}
+
+.documents-title {
+  color: #2c3e50;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.documents-title i {
+  margin-right: 10px;
+  color: #0072ce;
+}
+
+.documents-list {
+  list-style: none;
+  padding: 0;
+}
+
+.documents-list li {
+  background: rgba(255, 255, 255, 0.7);
+  margin-bottom: 8px;
+  padding: 12px 15px 12px 45px;
+  border-radius: 8px;
+  border-left: 3px solid #0072ce;
+  position: relative;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  color: #2c3e50;
+}
+
+.documents-list li:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateX(3px);
+}
+
+.documents-list li::before {
+  content: "\f0c1";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #0072ce;
+  font-size: 0.9rem;
+}
+
+.final-note {
+  background: linear-gradient(
+    135deg,
+    rgba(46, 204, 113, 0.1),
+    rgba(39, 174, 96, 0.05)
+  );
+  border-left: 4px solid #27ae60;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  margin-top: 30px;
+  position: relative;
+}
+
+.final-note i {
+  color: #27ae60;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.final-note-text {
+  color: #2c3e50;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 14px 25px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn i {
+  margin-right: 8px;
+  font-size: 1.1rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #005a9e, #1976d2);
+  color: white;
+  box-shadow: 0 8px 25px rgba(0, 114, 206, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(0, 114, 206, 0.4);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #7f8c8d, #95a5a6);
+  color: white;
+  box-shadow: 0 8px 25px rgba(127, 140, 141, 0.3);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(127, 140, 141, 0.4);
+}
+
+.additional-links {
+  text-align: center;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #ecf0f1;
+}
+
+.additional-links a {
+  color: #0072ce;
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin: 0 15px;
+  transition: color 0.3s ease;
+  display: inline-block;
+}
+
+.additional-links a:hover {
+  color: #cf212e;
+}
+
+@media (max-width: 768px) {
+  .register-container {
+    margin: 10px;
+    padding: 30px 25px;
+    max-width: 95%;
+  }
+
+  .university-name {
+    font-size: 1.3rem;
+  }
+
+  .success-title {
+    font-size: 1.5rem;
+  }
+
+  .info-section h3 {
+    font-size: 1.2rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn {
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+  }
+
+  .additional-links a {
+    display: block;
+    margin: 10px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px 0;
+  }
+
+  .register-container {
+    padding: 25px 20px;
+  }
+
+  .register-title {
+    font-size: 1.2rem;
+  }
+
+  .success-title {
+    font-size: 1.3rem;
+  }
+
+  .success-icon {
+    font-size: 2.5rem;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="register-container">
+    <div class="university-header">
+        <div class="university-logo">
+            {% load static %}
+            <img src="{% static 'images/icons/icon-512x512.png' %}" alt="Logo Universidad" style="width: 60%; height: 60%;">
+        </div>
+        <h1 class="university-name">UPT "Jose Felix Ribas"</h1>
+        <p class="university-subtitle">Excelencia Académica Nacional</p>
+    </div>
+
+    <div class="patriotic-banner"></div>
+
+    <div class="success-header">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h1 class="success-title">¡Registro Exitoso!</h1>
+        <p class="success-subtitle">Has completado tu pre-inscripción correctamente</p>
+    </div>
+
+    <div class="preinscription-info">
+        <i class="fas fa-exclamation-triangle"></i>
+        <strong>Información Importante:</strong> Es indispensable la entrega de Documentos en las Fechas y Lugar Elegidos para Estudiar y así Garantizar la inscripción en la Universidad.
+    </div>
+
+    <div class="info-section">
+        <h3><i class="fas fa-calendar-alt"></i> Recepción de Documentos</h3>
+        <div class="date-highlight">
+            <div class="date-text">22 al 30 de Septiembre de 2025</div>
+            <div class="location-text">En la oficina de Control de Estudio de la Sede que hayas seleccionado para estudiar</div>
+        </div>
+
+        <div class="documents-section">
+            <div class="documents-title">
+                <i class="fas fa-clipboard-list"></i>
+                Documentos Requeridos para Formalizar Inscripción:
+            </div>
+            <ul class="documents-list">
+                <li>Una (1) Carpeta Amarilla Nueva Tamaño Oficio</li>
+                <li>Una (1) Fotografía Tamaño Carnet</li>
+                <li>Una (1) Copia Ampliada de la Cédula de Identidad al 150%, centrada en una hoja tamaño carta</li>
+                <li>Una (1) Copia legible de la Partida de Nacimiento</li>
+                <li>Certificado de Participación en el Sistema Nacional de Ingreso OPSU</li>
+                <li>Una (1) Copia simple de las Notas de Bachillerato con original a la vista</li>
+                <li>Una (1) Copia simple del Título de Bachiller con original a la vista</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="final-note">
+        <i class="fas fa-envelope"></i>
+        <p class="final-note-text">
+            Después de entregar sus documentos en la sede correspondiente, 
+            recibirá un correo con sus datos de inicio de sesión.
+        </p>
+    </div>
+
+    <div class="action-buttons">
+        <a href="{% url 'login' %}" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt"></i>
+            Iniciar Sesión
+        </a>
+    </div>
+
+    <div class="additional-links">
+        <a href="#" onclick="alert('Contacte al departamento de admisiones: admisiones@universidad.edu.ve')">
+            <i class="fas fa-envelope"></i> Contactar Admisiones
+        </a>
+        <a href="#" onclick="alert('Descargue la guía de preinscripción desde nuestro sitio web')">
+            <i class="fas fa-download"></i> Guía de Preinscripción
+        </a>
+        <a href="#" onclick="window.print()">
+            <i class="fas fa-print"></i> Imprimir Información
+        </a>
+    </div>
+</div>
+
+<script>
+    // Efectos de animación al cargar (igual que tu register.html)
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.querySelector('.register-container');
+        container.style.opacity = '0';
+        container.style.transform = 'translateY(50px)';
+        
+        setTimeout(() => {
+            container.style.transition = 'all 0.6s ease';
+            container.style.opacity = '1';
+            container.style.transform = 'translateY(0)';
+        }, 100);
+
+        // Animación de aparición secuencial de elementos
+        const elements = ['.success-header', '.preinscription-info', '.info-section', '.final-note'];
+        elements.forEach((selector, index) => {
+            const element = document.querySelector(selector);
+            if (element) {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    element.style.transition = 'all 0.5s ease';
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, 300 + (index * 200));
+            }
+        });
+    });
+
+    // Efecto de hover en la lista de documentos
+    document.querySelectorAll('.documents-list li').forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = 'rgba(0, 114, 206, 0.1)';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block extra_css %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="login-container">
+    <div class="university-header">
+        <div class="university-logo">
+            {% load static %}
+            <img src="{% static 'images/icons/icon-512x512.png' %}" alt="Logo Universidad" style="width: 60%; height: 60%;">
+        </div>
+        <h1 class="university-name">UPT "Jose Felix Ribas"</h1>
+        <p class="university-subtitle">Excelencia Académica Nacional</p>
+    </div>
+
+    <div class="patriotic-banner"></div>
+
+    <h2 class="login-title">
+        <i class="fas fa-shield-alt"></i> Acceso al Sistema
+    </h2>
+
+    {% comment %} <!-- Selector de tipo de usuario -->
+    <div class="user-type-selector">
+        <button type="button" class="user-type-btn active" data-type="estudiante">
+            <i class="fas fa-user-graduate"></i> Estudiante
+        </button>
+        <button type="button" class="user-type-btn" data-type="docente">
+            <i class="fas fa-chalkboard-teacher"></i> Docente
+        </button>
+        <button type="button" class="user-type-btn" data-type="admin">
+            <i class="fas fa-user-cog"></i> Personal
+        </button>
+    </div> {% endcomment %}
+
+    <!-- Mensajes de Django -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <i class="fas fa-info-circle"></i> {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post" id="loginForm">
+        {% csrf_token %}
+        {{ form.as_p }}
+        
+        <!-- Checkbox Recordarme (opcional) -->
+        <div class="remember-me">
+            <input type="checkbox" id="remember" name="remember_me">
+            <label for="remember">Recordar mis datos</label>
+        </div>
+        
+        <button type="submit">Ingresar al Sistema</button>
+    </form>
+
+    <div class="additional-links">
+        <a href="#" onclick="showForgotPassword()">
+            <i class="fas fa-question-circle"></i> ¿Olvidó su contraseña?
+        </a>
+        <a href="#" onclick="showHelp()">
+            <i class="fas fa-life-ring"></i> Ayuda
+        </a>
+    </div>
+
+    <!-- Destacar registro para nuevos estudiantes -->
+    <div class="register-highlight">
+        <p><i class="fas fa-info-circle"></i> <strong>¿Nuevo estudiante?</strong></p>
+        <p>Complete su preinscripción aquí:</p>
+        <a href="{% url 'register' %}">
+            <i class="fas fa-user-plus"></i> Preinscribirse Ahora
+        </a>
+    </div>
+</div>
+
+<script>
+    // Selector de tipo de usuario
+    document.querySelectorAll('.user-type-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remover active de todos
+            document.querySelectorAll('.user-type-btn').forEach(b => b.classList.remove('active'));
+            // Agregar active al clickeado
+            this.classList.add('active');
+            
+            // Cambiar placeholder del campo usuario según el tipo
+            const usernameField = document.querySelector('input[name="usuario"], input[id*="usuario"]');
+            const userType = this.dataset.type;
+            
+            if (usernameField) {
+                switch(userType) {
+                    case 'estudiante':
+                        usernameField.placeholder = 'Cédula o usuario estudiante';
+                        break;
+                    case 'docente':
+                        usernameField.placeholder = 'Usuario docente';
+                        break;
+                    case 'admin':
+                        usernameField.placeholder = 'Usuario administrativo';
+                        break;
+                }
+            }
+        });
+    });
+
+    // Funciones para los enlaces
+    function showForgotPassword() {
+        alert('Para recuperar su contraseña:\n\n' +
+              '• Estudiantes: Contacte al Depto. de Sistemas\n' +
+              '• Docentes: Contacte a Recursos Humanos\n' +
+              '• Personal: Contacte a su supervisor directo\n\n' +
+              'Email: sistemas@universidad.edu.ve');
+    }
+
+    function showHelp() {
+        alert('Ayuda de acceso:\n\n' +
+              '• Estudiantes: Use su cédula como usuario\n' +
+              '• Docentes: Use el usuario enviado a su email\n' +
+              '• Personal: Use su usuario institucional\n\n' +
+              'Para soporte: WhatsApp +58 412-1234567');
+    }
+
+    // Efectos de animación al cargar
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.querySelector('.login-container');
+        container.style.opacity = '0';
+        container.style.transform = 'translateY(50px)';
+        
+        setTimeout(() => {
+            container.style.transition = 'all 0.6s ease';
+            container.style.opacity = '1';
+            container.style.transform = 'translateY(0)';
+        }, 100);
+
+        // Configurar placeholder inicial
+        const usernameField = document.querySelector('input[name="username"], input[id*="username"]');
+        if (usernameField) {
+            usernameField.placeholder = 'Cédula o usuario estudiante';
+        }
+        const passwordField = document.querySelector('input[name="password"], input[id*="password"]');
+        if (passwordField) {
+            passwordField.placeholder = 'Ingrese su contraseña';
+        }
+    });
+
+    // Efecto de carga en el botón de submit
+    document.getElementById('loginForm').addEventListener('submit', function() {
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.classList.add('loading');
+        
+        // Remover loading si hay errores (después de 2 segundos)
+        setTimeout(() => {
+            if (document.querySelector('.errorlist')) {
+                submitBtn.classList.remove('loading');
+            }
+        }, 2000);
+    });
+
+    // Validación básica
+    document.querySelectorAll('form input').forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.hasAttribute('required') && !this.value.trim()) {
+                this.style.borderColor = '#CF212E';
+            } else {
+                this.style.borderColor = '#e1e8ed';
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,462 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  background-image: url("../images/img/logo.jpg"), linear-gradient(135deg, #74ebd5, #acb6e5);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  height: 100vh;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(
+      circle at 20% 80%,
+      rgba(255, 204, 0, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(0, 114, 206, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 40%,
+      rgba(207, 33, 46, 0.1) 0%,
+      transparent 50%
+    );
+}
+
+.login-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  width: 100%;
+  max-width: 450px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.university-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.university-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: white;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.university-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 5px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.university-subtitle {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  font-weight: 300;
+}
+
+.patriotic-banner {
+  height: 5px;
+  background: linear-gradient(
+    to right,
+    #ffcc00 33.33%,
+    #0072ce 33.33%,
+    #0072ce 66.66%,
+    #cf212e 66.66%
+  );
+  border-radius: 3px;
+  margin: 25px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-title {
+  text-align: center;
+  color: #2c3e50;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+/* Selector de tipo de usuario */
+.user-type-selector {
+  display: flex;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 25px;
+  border: 2px solid #e1e8ed;
+}
+
+.user-type-btn {
+  flex: 1;
+  padding: 10px 15px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #7f8c8d;
+}
+
+.user-type-btn.active {
+  background: linear-gradient(135deg, #0072ce, #1e88e5);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 114, 206, 0.3);
+}
+
+.user-type-btn i {
+  margin-right: 8px;
+  font-size: 0.8rem;
+}
+
+/* Estilos para los campos del formulario Django */
+form p {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+/* Labels de Django */
+form p label {
+  display: block;
+  margin-bottom: 8px;
+  color: #34495e;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+/* Inputs de Django */
+form p input[type="text"],
+form p input[type="password"],
+form p input[type="email"],
+form input[type="text"],
+form input[type="password"],
+form input[type="email"] {
+  width: 100%;
+  padding: 15px 20px 15px 50px !important;
+  border: 2px solid #e1e8ed !important;
+  border-radius: 12px !important;
+  font-size: 1rem !important;
+  transition: all 0.3s ease !important;
+  background: #fff !important;
+  box-sizing: border-box !important;
+}
+
+form p input:focus,
+form input:focus {
+  outline: none !important;
+  border-color: #0072ce !important;
+  box-shadow: 0 0 0 3px rgba(0, 114, 206, 0.1) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Iconos para campos de usuario/cédula */
+form p:first-of-type {
+  position: relative;
+}
+
+form p:first-of-type::before {
+  content: "\f2c2"; /* id-card icon mejorado */
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  position: absolute;
+  left: 18px;
+  top: 40px;
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Iconos para campos de contraseña */
+form p:nth-of-type(2) {
+  position: relative;
+}
+
+form p:nth-of-type(2)::before {
+  content: "\f023"; /* lock icon */
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  position: absolute;
+  left: 18px;
+  top: 40px;
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Cambiar color del icono cuando el input está enfocado */
+form p:first-of-type:has(input:focus)::before,
+form p:nth-of-type(2):has(input:focus)::before {
+  color: #0072ce;
+}
+
+/* Fallback para navegadores que no soportan :has */
+form p input:focus ~ *::before {
+  color: #0072ce;
+}
+
+/* Checkbox "Recordarme" */
+.remember-me {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  color: #34495e;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 18px !important;
+  height: 18px !important;
+  margin-right: 10px !important;
+  padding: 0 !important;
+  accent-color: #0072ce;
+  transform: none !important;
+  box-shadow: none !important;
+  border-radius: 4px !important;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #0072ce, #1e88e5);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(0, 114, 206, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+button[type="submit"]:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(0, 114, 206, 0.4);
+  background: linear-gradient(135deg, #005a9e, #1976d2);
+}
+
+button[type="submit"]:active {
+  transform: translateY(-1px);
+}
+
+button[type="submit"]:before {
+  content: "\f090 ";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  margin-right: 10px;
+}
+
+/* Efecto de carga en el botón */
+button[type="submit"].loading {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+button[type="submit"].loading:before {
+  content: "\f1ce ";
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.additional-links {
+  text-align: center;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #ecf0f1;
+}
+
+.additional-links a {
+  color: #0072ce;
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin: 0 10px;
+  transition: color 0.3s ease;
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 8px;
+}
+
+.additional-links a:hover {
+  color: #cf212e;
+  background: rgba(0, 114, 206, 0.05);
+}
+
+.register-highlight {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 204, 0, 0.1),
+    rgba(0, 114, 206, 0.1)
+  );
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 20px;
+  text-align: center;
+  border: 1px solid rgba(0, 114, 206, 0.2);
+}
+
+.register-highlight p {
+  margin: 0 0 10px 0;
+  font-size: 0.9rem;
+  color: #2c3e50;
+}
+
+.register-highlight a {
+  display: inline-block;
+  background: linear-gradient(135deg, #0072ce, #1e88e5);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.register-highlight a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 204, 0, 0.3);
+}
+
+.stars-pattern {
+  position: absolute;
+  top: 33.33%;
+  left: 0;
+  right: 0;
+  height: 33.33%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stars-pattern::before {
+  content: "★★★★★★★★";
+  color: white;
+  font-size: 3px;
+  letter-spacing: 1px;
+}
+
+/* Mensajes de error de Django */
+.errorlist {
+  list-style: none;
+  color: #cf212e;
+  background: rgba(207, 33, 46, 0.1);
+  border: 1px solid rgba(207, 33, 46, 0.3);
+  border-radius: 8px;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}
+
+.errorlist li {
+  margin-bottom: 5px;
+}
+
+.errorlist li:before {
+  content: "\f06a ";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  margin-right: 8px;
+}
+
+/* Mensaje de éxito */
+.messages {
+  margin-bottom: 20px;
+}
+
+.messages .alert {
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.messages .alert-success {
+  background: rgba(46, 204, 113, 0.1);
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  color: #27ae60;
+}
+
+.messages .alert-info {
+  background: rgba(52, 152, 219, 0.1);
+  border: 1px solid rgba(52, 152, 219, 0.3);
+  color: #3498db;
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    margin: 20px;
+    padding: 30px 25px;
+  }
+
+  .university-name {
+    font-size: 1.3rem;
+  }
+
+  button[type="submit"] {
+    padding: 14px;
+  }
+
+  .user-type-selector {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .additional-links a {
+    display: block;
+    margin: 8px 0;
+  }
+}
