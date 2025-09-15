@@ -1,0 +1,45 @@
+{
+  "name": "Control Estudio Movil",
+  "short_name": "Estudio",
+  "description": "Aplicación web progresiva para el control de estudio.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "es-ES",
+  "icons": [
+    {
+      "src": "/static/images/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/images/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/static/images/screenshots/screenshot1.png",
+      "sizes": "1366x768",
+      "type": "image/png",
+      "label": "Pantalla principal"
+    },
+    {
+      "src": "/static/images/screenshots/screenshot2.png",
+      "sizes": "1366x768",
+      "type": "image/png",
+      "label": "Funcionalidades"
+    },
+    {
+      "src": "/static/images/screenshots/screenshot3.png",
+      "sizes": "1366x768",
+      "type": "image/png",
+      "label": "Estadísticas",
+      "form_factor": "wide"
+    }
+  ]
+}

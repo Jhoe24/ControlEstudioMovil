@@ -1,489 +1,855 @@
-{% extends "base.html" %}
-{% load static %}
-{% block extra_css %}
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    body {
-        font-family: "Arial", sans-serif;
-        background-image: url("../images/img/logo.jpg"), linear-gradient(135deg, #74ebd5, #acb6e5);
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        min-height: 100vh;
-        height: 100vh;
-        overflow: auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-    }
-    body::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image: radial-gradient(
-            circle at 20% 80%,
-            rgba(255, 204, 0, 0.1) 0%,
-            transparent 50%
-        ),
-        radial-gradient(
-            circle at 80% 20%,
-            rgba(0, 114, 206, 0.1) 0%,
-            transparent 50%
-        ),
-        radial-gradient(
-            circle at 40% 40%,
-            rgba(207, 33, 46, 0.1) 0%,
-            transparent 50%
-        );
-    }
-    .student-portal-container {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
-        width: 100%;
-        max-width: 1200px;
-        max-height: 80vh;
-        overflow-y: auto;
-        padding: 40px;
-        position: relative;
-        z-index: 1;
-    }
-    .university-header {
-        text-align: center;
-        margin-bottom: 35px;
-    }
-    .university-logo {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        margin: 0 auto 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        color: white;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-    .university-name {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #2c3e50;
-        margin-bottom: 5px;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-    .university-subtitle {
-        color: #7f8c8d;
-        font-size: 0.9rem;
-        font-weight: 300;
-    }
-    .patriotic-banner {
-        height: 5px;
-        background: linear-gradient(
-            to right,
-            #ffcc00 33.33%,
-            #0072ce 33.33%,
-            #0072ce 66.66%,
-            #cf212e 66.66%
-        );
-        border-radius: 3px;
-        margin: 25px 0;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-    .panel-header {
-        text-align: center;
-        margin-bottom: 40px;
-    }
-    .student-badge {
-        background: linear-gradient(135deg, #0072ce, #1e88e5);
-        color: white;
-        padding: 12px 25px;
-        border-radius: 25px;
-        font-size: 1.2rem;
-        font-weight: 600;
-        margin-bottom: 15px;
-        display: inline-flex;
-        align-items: center;
-        box-shadow: 0 8px 25px rgba(0, 114, 206, 0.3);
-    }
-    .student-badge i {
-        margin-right: 10px;
-        font-size: 1.3rem;
-    }
-    .panel-title {
-        color: #2c3e50;
-        font-size: 1.8rem;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-    .welcome-message {
-        background: linear-gradient(
-            135deg,
-            rgba(0, 114, 206, 0.1),
-            rgba(255, 204, 0, 0.1)
-        );
-        border-left: 4px solid #0072ce;
-        padding: 20px;
-        margin-bottom: 30px;
-        border-radius: 8px;
-        font-size: 1rem;
-        color: #2c3e50;
-    }
-    .welcome-message i {
-        color: #0072ce;
-        margin-right: 10px;
-        font-size: 1.2rem;
-    }
-    /* Grid de módulos del estudiante */
-    .student-modules {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 25px;
-        margin-bottom: 30px;
-    }
-    .module-card {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 15px;
-        padding: 25px;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        border-left: 5px solid transparent;
-        cursor: pointer;
-        text-decoration: none;
-        color: inherit;
-        display: block;
-    }
-    .module-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-        text-decoration: none;
-        color: inherit;
-    }
-    .module-card.schedule {
-        border-left-color: #0072ce;
-    }
-    .module-card.schedule:hover {
-        background: linear-gradient(135deg, rgba(0, 114, 206, 0.05), rgba(255, 255, 255, 0.9));
-    }
-    .module-card.grades {
-        border-left-color: #27ae60;
-    }
-    .module-card.grades:hover {
-        background: linear-gradient(135deg, rgba(39, 174, 96, 0.05), rgba(255, 255, 255, 0.9));
-    }
-    .module-card.materials {
-        border-left-color: #f39c12;
-    }
-    .module-card.materials:hover {
-        background: linear-gradient(135deg, rgba(243, 156, 18, 0.05), rgba(255, 255, 255, 0.9));
-    }
-    .module-card.profile {
-        border-left-color: #cf212e;
-    }
-    .module-card.profile:hover {
-        background: linear-gradient(135deg, rgba(207, 33, 46, 0.05), rgba(255, 255, 255, 0.9));
-    }
-    .module-card.announcements {
-        border-left-color: #9b59b6;
-    }
-    .module-card.announcements:hover {
-        background: linear-gradient(135deg, rgba(155, 89, 182, 0.05), rgba(255, 255, 255, 0.9));
-    }
-    .module-card.settings {
-        border-left-color: #34495e;
-    }
-    .module-card.settings:hover {
-        background: linear-gradient(135deg, rgba(52, 73, 94, 0.05), rgba(255, 255, 255, 0.9));
-    }
-    .module-icon {
-        font-size: 2.5rem;
-        margin-bottom: 15px;
-        display: block;
-    }
-    .module-card.schedule .module-icon { color: #0072ce; }
-    .module-card.grades .module-icon { color: #27ae60; }
-    .module-card.materials .module-icon { color: #f39c12; }
-    .module-card.profile .module-icon { color: #cf212e; }
-    .module-card.announcements .module-icon { color: #9b59b6; }
-    .module-card.settings .module-icon { color: #34495e; }
-    .module-title {
-        font-size: 1.3rem;
-        font-weight: 600;
-        color: #2c3e50;
-        margin-bottom: 8px;
-    }
-    .module-description {
-        color: #7f8c8d;
-        font-size: 0.9rem;
-        line-height: 1.5;
-        margin-bottom: 15px;
-    }
-    .module-stats {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 0.85rem;
-        color: #95a5a6;
-    }
-    .stat-item {
-        display: flex;
-        align-items: center;
-    }
-    .stat-item i {
-        margin-right: 5px;
-    }
-    /* Panel de estadísticas rápidas */
-    .quick-stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
-    }
-    .stat-card {
-        background: rgba(255, 255, 255, 0.9);
-        padding: 20px;
-        border-radius: 12px;
-        text-align: center;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-    }
-    .stat-card:hover {
-        transform: translateY(-3px);
-    }
-    .stat-number {
-        font-size: 2.2rem;
-        font-weight: bold;
-        margin-bottom: 8px;
-    }
-    .stat-card.schedule .stat-number { color: #0072ce; }
-    .stat-card.grades .stat-number { color: #27ae60; }
-    .stat-card.materials .stat-number { color: #f39c12; }
-    .stat-card.pending .stat-number { color: #cf212e; }
-    .stat-label {
-        color: #7f8c8d;
-        font-size: 0.9rem;
-        font-weight: 500;
-    }
-    /* Logout button */
-    .logout-section {
-        text-align: center;
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px solid #ecf0f1;
-    }
-    .logout-btn {
-        background: linear-gradient(135deg, #cf212e, #8b1538);
-        color: white;
-        padding: 12px 25px;
-        border: none;
-        border-radius: 10px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        box-shadow: 0 6px 20px rgba(207, 33, 46, 0.3);
-    }
-    .logout-btn i {
-        margin-right: 8px;
-    }
-    .logout-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(207, 33, 46, 0.4);
-        text-decoration: none;
-        color: white;
-    }
-    @media (max-width: 768px) {
-        .panel-container {
-            margin: 10px;
-            padding: 30px 25px;
-            max-width: 95%;
-        }
-        .panel-title {
-            font-size: 1.5rem;
-        }
-        .quick-stats {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-    @media (max-width: 480px) {
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Portal del Estudiante - UPT José Félix Ribas</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* ---------- Estilos existentes (copiados y completados) ---------- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            padding: 10px 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f4c75 0%, #3282b8 50%, #bbe1fa 100%);
+            min-height: 100vh; padding: 20px;
         }
-        .panel-container {
-            padding: 25px 20px;
+        .student-portal-container {
+            background: rgba(255,255,255,0.96); backdrop-filter: blur(15px);
+            border-radius: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            max-width: 1400px; margin: 0 auto; padding: 40px;
+            border: 1px solid rgba(255,255,255,0.3); position: relative; overflow: hidden;
         }
-        .panel-title {
-            font-size: 1.5rem;
+        .student-portal-container::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(0,114,206,0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255,204,0,0.05) 0%, transparent 50%);
+            pointer-events: none;
         }
-        .quick-stats {
-            grid-template-columns: 1fr;
+        .university-header { text-align: center; margin-bottom: 30px; position: relative; z-index: 1; }
+        .university-logo {
+            width: 90px; height: 90px; background: linear-gradient(135deg, #0072ce, #1e88e5);
+            border-radius: 50%; margin: 0 auto 20px; display:flex; align-items:center; justify-content:center;
+            font-size:2.2rem; color:white; box-shadow:0 12px 35px rgba(0,114,206,0.3); border:3px solid rgba(255,255,255,0.2);
         }
-        .stat-number {
-            font-size: 1.8rem;
+        .university-name {
+            font-size:2rem; font-weight:700; background: linear-gradient(135deg, #0072ce, #1e88e5);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:8px;
         }
-    }
-</style>
-{% endblock %}
-{% block content %}
-<div class="student-portal-container">
-    <div class="university-header">
-        <div class="university-logo">
-            {% load static %}
-            <img src="{% static 'images/icons/icon-512x512.png' %}" alt="Logo Universidad" style="width: 60%; height: 60%;">
-        </div>
-        <h1 class="university-name">UPT "Jose Felix Ribas"</h1>
-        <p class="university-subtitle">Excelencia Académica Nacional</p>
-    </div>
-    <div class="patriotic-banner"></div>
-    <div class="panel-header">
-        <div class="student-badge">
-            <i class="fas fa-user-graduate"></i>
-            Portal del Estudiante
-        </div>
-        <h2 class="panel-title">Bienvenido/a {{ user.get_full_name|default:"Estudiante" }}</h2>
-    </div>
-    <div class="welcome-message">
-        <i class="fas fa-info-circle"></i>
-        Aquí encontrarás toda la información relevante para tu formación académica. Accede a tus horarios, calificaciones, materiales de estudio y más.
-    </div>
-    <!-- Estadísticas Rápidas -->
-    <div class="quick-stats">
-        <div class="stat-card schedule">
-            <div class="stat-number">5</div>
-            <div class="stat-label">Clases Hoy</div>
-        </div>
-        <div class="stat-card grades">
-            <div class="stat-number">8.7</div>
-            <div class="stat-label">Promedio General</div>
-        </div>
-        <div class="stat-card materials">
-            <div class="stat-number">3</div>
-            <div class="stat-label">Materiales Nuevos</div>
-        </div>
-        <div class="stat-card pending">
-            <div class="stat-number">1</div>
-            <div class="stat-label">Tareas Pendientes</div>
-        </div>
-    </div>
-    <!-- Módulos del Estudiante -->
-    <div class="student-modules">
-        <a href="#" class="module-card schedule">
-            <i class="fas fa-calendar-alt module-icon"></i>
-            <h3 class="module-title">Horario de Clases</h3>
-            <p class="module-description">Consulta tu horario semanal, fechas de exámenes y eventos académicos.</p>
-            <div class="module-stats">
-                <span class="stat-item"><i class="fas fa-clock"></i> Semestre Actual</span>
-                <span class="stat-item"><i class="fas fa-calendar"></i> Ver calendario</span>
-            </div>
-        </a>
-        <a href="#" class="module-card grades">
-            <i class="fas fa-clipboard-list module-icon"></i>
-            <h3 class="module-title">Calificaciones</h3>
-            <p class="module-description">Revisa tus calificaciones parciales y finales, así como tu historial académico.</p>
-            <div class="module-stats">
-                <span class="stat-item"><i class="fas fa-book"></i> Promedio 8.7</span>
-                <span class="stat-item"><i class="fas fa-chart-line"></i> Ver detalles</span>
-            </div>
-        </a>
-        <a href="#" class="module-card materials">
-            <i class="fas fa-book-open module-icon"></i>
-            <h3 class="module-title">Materiales de Estudio</h3>
-            <p class="module-description">Accede a los materiales, recursos y bibliografía recomendada para tus cursos.</p>
-            <div class="module-stats">
-                <span class="stat-item"><i class="fas fa-file-pdf"></i> 12 nuevos</span>
-                <span class="stat-item"><i class="fas fa-folder"></i> Todos los cursos</span>
-            </div>
-        </a>
-        <a href="#" class="module-card profile">
-            <i class="fas fa-user module-icon"></i>
-            <h3 class="module-title">Perfil Personal</h3>
-            <p class="module-description">Actualiza tu información personal, datos de contacto y configuración de cuenta.</p>
-            <div class="module-stats">
-                <span class="stat-item"><i class="fas fa-user-edit"></i> Editar perfil</span>
-                <span class="stat-item"><i class="fas fa-lock"></i> Cambiar contraseña</span>
-            </div>
-        </a>
-        <a href="#" class="module-card announcements">
-            <i class="fas fa-bullhorn module-icon"></i>
-            <h3 class="module-title">Anuncios</h3>
-            <p class="module-description">Mantente al día con los anuncios importantes, eventos y noticias de la universidad.</p>
-            <div class="module-stats">
-                <span class="stat-item"><i class="fas fa-bell"></i> 3 nuevos</span>
-                <span class="stat-item"><i class="fas fa-eye"></i> Ver todos</span>
-            </div>
-        </a>
-        <a href="#" class="module-card settings">
-            <i class="fas fa-cog module-icon"></i>
-            <h3 class="module-title">Configuración</h3>
-            <p class="module-description">Personaliza tu experiencia en el portal y ajusta tus preferencias.</p>
-            <div class="module-stats">
-                <span class="stat-item"><i class="fas fa-sliders-h"></i> Preferencias</span>
-                <span class="stat-item"><i class="fas fa-palette"></i> Tema</span>
-            </div>
-        </a>
-    </div>
-    <!-- Logout -->
-    <div class="logout-section">
-        <a href="{% url 'logout' %}" class="logout-btn">
-            <i class="fas fa-sign-out-alt"></i>
-            Cerrar Sesión
-        </a>
-    </div>
-</div>
-<script>
-    // Efectos de animación al cargar
-    document.addEventListener('DOMContentLoaded', function() {
-        const container = document.querySelector('.student-portal-container');
-        container.style.opacity = '0';
-        container.style.transform = 'translateY(50px)';
+        .university-subtitle { color:#7f8c8d; font-size:1.1rem; font-weight:400; margin-bottom:25px; }
+        .patriotic-banner { height:6px; background: linear-gradient(to right, #ffcc00 33.33%, #0072ce 33.33%, #0072ce 66.66%, #cf212e 66.66%); border-radius:3px; margin:25px 0; box-shadow:0 3px 15px rgba(0,0,0,0.1); }
 
-        setTimeout(() => {
-            container.style.transition = 'all 0.6s ease';
-            container.style.opacity = '1';
-            container.style.transform = 'translateY(0)';
-        }, 100);
-        // Animación secuencial de las tarjetas
-        const cards = document.querySelectorAll('.module-card');
-        cards.forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-                card.style.transition = 'all 0.5s ease';
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, 400 + (index * 100));
-        });
-        // Animación de estadísticas
-        const statCards = document.querySelectorAll('.stat-card');
-        statCards.forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'scale(0.8)';
-            setTimeout(() => {
-                card.style.transition = 'all 0.5s ease';
-                card.style.opacity = '1';
-                card.style.transform = 'scale(1)';
-            }, 200 + (index * 80));
-        });
-    });
-    // Confirmación para logout
-    document.querySelector('.logout-btn').addEventListener('click', function(e) {
-        if (!confirm('¿Está seguro que desea cerrar sesión?')) {
-            e.preventDefault();
+        .student-info-header {
+            background: linear-gradient(135deg, rgba(0,114,206,0.1), rgba(30,136,229,0.1));
+            padding:25px; border-radius:15px; margin-bottom:35px; border:1px solid rgba(0,114,206,0.2);
+            position: relative; z-index:1;
         }
-    });
-</script>
-{% endblock %}
+        .student-badge {
+            background: linear-gradient(135deg, #0072ce, #1e88e5); color:white; padding:15px 30px; border-radius:30px;
+            font-size:1.3rem; font-weight:600; display:inline-flex; align-items:center; box-shadow:0 10px 30px rgba(0,114,206,0.3);
+            margin-bottom:20px;
+        }
+        .student-badge i { margin-right:12px; font-size:1.5rem; }
+        .student-details { display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px; margin-top:20px; }
+        .detail-item { display:flex; align-items:center; gap:10px; color:#2c3e50; font-size:1rem; }
+        .detail-item i { color:#0072ce; width:20px; text-align:center; }
+        .detail-value { font-weight:600; }
+
+        .academic-summary { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:20px; margin-bottom:40px; }
+        .summary-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+            padding: 25px 20px; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.1);
+            text-align:center; position:relative; overflow:hidden; transition:all 0.3s ease; border-top:4px solid var(--card-color);
+        }
+        .summary-card:hover { transform: translateY(-5px); box-shadow:0 15px 40px rgba(0,0,0,0.15); }
+        .summary-card::after { content:''; position:absolute; top:0; right:0; width:60px; height:60px; background:var(--card-color); opacity:0.1; border-radius:50%; transform:translate(20px,-20px); }
+        .summary-number { font-size:2.5rem; font-weight:700; color:var(--card-color); margin-bottom:10px; }
+        .summary-label { color:#7f8c8d; font-size:0.95rem; font-weight:500; margin-bottom:8px; }
+        .summary-detail { color:#95a5a6; font-size:0.8rem; }
+
+        .card-grades { --card-color: #27ae60; }
+        .card-subjects { --card-color: #0072ce; }
+        .card-trajectory { --card-color: #f39c12; }
+        .card-period { --card-color: #9b59b6; }
+
+        .student-modules { display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:25px; margin-bottom:40px; }
+        .module-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+            border-radius:18px; padding:30px; box-shadow:0 12px 35px rgba(0,0,0,0.1); transition:all 0.3s ease;
+            cursor:pointer; text-decoration:none; color:inherit; position:relative; overflow:hidden; border:1px solid rgba(255,255,255,0.3);
+        }
+        .module-card::before { content:''; position:absolute; top:0; left:0; right:0; height:5px; background:var(--module-color); }
+        .module-card:hover { transform: translateY(-8px); box-shadow:0 20px 50px rgba(0,0,0,0.15); text-decoration:none; color:inherit; }
+        .module-card:hover .module-icon { transform: scale(1.1); }
+        .module-icon { font-size:3rem; color:var(--module-color); margin-bottom:20px; transition:transform 0.3s ease; display:block; }
+        .module-title { font-size:1.4rem; font-weight:700; color:#2c3e50; margin-bottom:12px; }
+        .module-description { color:#7f8c8d; font-size:1rem; line-height:1.6; margin-bottom:20px; }
+        .module-features { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; }
+        .feature-tag { background: rgba(0,114,206,0.1); color:#0072ce; padding:5px 12px; border-radius:15px; font-size:0.8rem; font-weight:500; }
+        .module-stats { display:flex; justify-content:space-between; align-items:center; font-size:0.9rem; color:#95a5a6; }
+        .stat-item { display:flex; align-items:center; gap:5px; }
+
+        .module-grades { --module-color: #27ae60; }
+        .module-subjects { --module-color: #0072ce; }
+        .module-trajectory { --module-color: #f39c12; }
+        .module-profile { --module-color: #e74c3c; }
+        .module-certificates { --module-color: #9b59b6; }
+        .module-period { --module-color: #34495e; }
+
+        .recent-activity { background: rgba(255,255,255,0.9); padding:30px; border-radius:18px; box-shadow:0 10px 30px rgba(0,0,0,0.1); margin-bottom:30px; }
+        .recent-activity h3 { font-size:1.5rem; color:#2c3e50; margin-bottom:25px; display:flex; align-items:center; gap:12px; }
+        .recent-activity h3 i { color:#0072ce; }
+        .activity-list { display:grid; gap:15px; }
+        .activity-item {
+            background: linear-gradient(135deg, rgba(0,114,206,0.05), rgba(255,255,255,0.5));
+            padding:20px; border-radius:12px; border-left:4px solid var(--activity-color); display:flex; align-items:center; gap:15px;
+            transition:all 0.3s ease;
+        }
+        .activity-item:hover { transform: translateX(5px); box-shadow:0 5px 20px rgba(0,0,0,0.1); }
+        .activity-icon { width:50px; height:50px; border-radius:50%; background:var(--activity-color); display:flex; align-items:center; justify-content:center; color:white; font-size:1.2rem; }
+        .activity-content { flex:1; }
+        .activity-title { font-weight:600; color:#2c3e50; margin-bottom:5px; }
+        .activity-desc { color:#7f8c8d; font-size:0.9rem; margin-bottom:5px; }
+        .activity-time { color:#bdc3c7; font-size:0.8rem; }
+        .activity-grades { --activity-color: #27ae60; }
+        .activity-subjects { --activity-color: #0072ce; }
+        .activity-certificates { --activity-color: #9b59b6; }
+
+        .logout-section { text-align:center; margin-top:40px; padding-top:30px; border-top:2px solid #ecf0f1; }
+        .logout-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b); color:white; padding:15px 35px; border:none; border-radius:30px;
+            font-size:1.1rem; font-weight:600; cursor:pointer; transition:all 0.3s ease; text-decoration:none; display:inline-flex; align-items:center; gap:12px; box-shadow:0 10px 30px rgba(231,76,60,0.3);
+        }
+        .logout-btn:hover { transform: translateY(-3px); box-shadow:0 15px 40px rgba(231,76,60,0.4); text-decoration:none; color:white; }
+
+        @media (max-width:768px) {
+            .student-portal-container { padding:25px 20px; margin:10px; }
+            .university-name { font-size:1.6rem; }
+            .student-details { grid-template-columns:1fr; gap:15px; }
+            .academic-summary { grid-template-columns: repeat(2,1fr); gap:15px; }
+            .student-modules { grid-template-columns:1fr; gap:20px; }
+            .module-card { padding:25px 20px; }
+        }
+        @media (max-width:480px) {
+            .academic-summary { grid-template-columns:1fr; }
+            .summary-number { font-size:2rem; }
+            .module-icon { font-size:2.5rem; }
+            .module-title { font-size:1.2rem; }
+        }
+
+        .fade-in { opacity:0; transform: translateY(30px); transition: all 0.6s ease; }
+        .fade-in.show { opacity:1; transform: translateY(0); }
+        .scale-in { opacity:0; transform: scale(0.9); transition: all 0.5s ease; }
+        .scale-in.show { opacity:1; transform: scale(1); }
+
+        /* ---------- Modal y notificaciones ---------- */
+        .overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center;
+            z-index: 9999; padding: 20px;
+        }
+        .modal {
+            width: 100%; max-width: 900px; background: white; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+            overflow: hidden; animation: pop 0.18s ease;
+        }
+        @keyframes pop { from { transform: translateY(8px) scale(0.98); opacity: 0 } to { transform: translateY(0) scale(1); opacity:1 } }
+        .modal-header { padding: 18px 22px; border-bottom: 1px solid #f1f1f1; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+        .modal-header h4 { font-size:1.1rem; color:#2c3e50; }
+        .modal-body { padding: 18px 22px; max-height: 60vh; overflow:auto; color:#2c3e50; }
+        .modal-footer { padding: 16px 22px; border-top: 1px solid #f1f1f1; text-align: right; }
+
+        .btn { display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:10px; cursor:pointer; border:none; background:#0072ce; color:white; font-weight:600; }
+        .btn.ghost { background:transparent; color:#2c3e50; border:1px solid #e6e6e6; }
+        .btn.danger { background: linear-gradient(135deg,#e74c3c,#c0392b); }
+
+        /* Tabla simple */
+        table { width:100%; border-collapse: collapse; margin-top:10px; }
+        th, td { padding:10px 8px; text-align:left; border-bottom:1px solid #f1f1f1; font-size:0.95rem; color:#34495e; }
+        th { color:#2c3e50; font-weight:700; font-size:0.95rem; }
+
+        /* Progress bar */
+        .progress { background:#ecf0f1; border-radius:999px; height:14px; overflow:hidden; }
+        .progress > div { height:100%; background: linear-gradient(90deg,#27ae60,#f39c12); width:0; transition: width 0.7s ease; }
+
+        /* Toast */
+        .toast {
+            position: fixed; right: 20px; bottom: 20px; background: rgba(0,0,0,0.8); color:white; padding:12px 18px; border-radius:10px;
+            z-index: 10000; display:flex; gap:10px; align-items:center; box-shadow:0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        /* Pequeños ajustes de formulario */
+        label { display:block; font-weight:600; margin-bottom:6px; color:#2c3e50; }
+        input[type="text"], input[type="email"], select, textarea {
+            width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e6e6e6; background:#fafafa; font-size:0.95rem;
+        }
+        textarea { min-height:100px; resize:vertical; }
+    </style>
+</head>
+<body>
+    <div class="student-portal-container fade-in">
+        <!-- University Header -->
+        <div class="university-header">
+            <div class="university-logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1 class="university-name">UPT "José Félix Ribas"</h1>
+            <p class="university-subtitle">Portal Académico del Estudiante</p>
+        </div>
+
+        <div class="patriotic-banner"></div>
+
+        <!-- Student Info Header -->
+        <div class="student-info-header scale-in">
+            <div class="student-badge">
+                <i class="fas fa-user-graduate"></i>
+                Portal del Estudiante
+            </div>
+            
+            <div class="student-details">
+                <div class="detail-item">
+                    <i class="fas fa-user"></i>
+                    <span>Estudiante: <span class="detail-value">Carlos Eduardo Rodríguez</span></span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-id-card"></i>
+                    <span>Cédula: <span class="detail-value">V-25.847.123</span></span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-laptop-code"></i>
+                    <span>Carrera: <span class="detail-value">Ingeniería en Informática</span></span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-route"></i>
+                    <span>Trayecto: <span class="detail-value">III</span></span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Tramo: <span class="detail-value">2</span></span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Período: <span class="detail-value">2024-I</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic Summary -->
+        <div class="academic-summary">
+            <div class="summary-card card-grades scale-in">
+                <div class="summary-number">17.85</div>
+                <div class="summary-label">Promedio General</div>
+                <div class="summary-detail">Excelente rendimiento</div>
+            </div>
+            
+            <div class="summary-card card-subjects scale-in">
+                <div class="summary-number">6</div>
+                <div class="summary-label">Materias Activas</div>
+                <div class="summary-detail">Trayecto III - Tramo 2</div>
+            </div>
+            
+            <div class="summary-card card-trajectory scale-in">
+                <div class="summary-number">75%</div>
+                <div class="summary-label">Progreso Trayecto</div>
+                <div class="summary-detail">Avance satisfactorio</div>
+            </div>
+            
+            <div class="summary-card card-period scale-in">
+                <div class="summary-number">14</div>
+                <div class="summary-label">UC Completadas</div>
+                <div class="summary-detail">Este período</div>
+            </div>
+        </div>
+
+        <!-- Student Modules -->
+        <div class="student-modules">
+            <a href="#" class="module-card module-grades fade-in" onclick="event.preventDefault(); showGrades()">
+                <i class="fas fa-clipboard-list module-icon"></i>
+                <h3 class="module-title">Mis Calificaciones</h3>
+                <p class="module-description">Consulta tus notas por materia, evaluaciones parciales y calificaciones finales de todos los períodos.</p>
+                <div class="module-features">
+                    <span class="feature-tag">Notas parciales</span>
+                    <span class="feature-tag">Historial académico</span>
+                    <span class="feature-tag">Promedio por materia</span>
+                </div>
+                <div class="module-stats">
+                    <span class="stat-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Promedio: 17.85</span>
+                    </span>
+                    <span class="stat-item"><i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <a href="#" class="module-card module-subjects fade-in" onclick="event.preventDefault(); showSubjects()">
+                <i class="fas fa-book module-icon"></i>
+                <h3 class="module-title">Mis Materias</h3>
+                <p class="module-description">Visualiza las materias inscritas, horarios, profesores y detalles de cada asignatura del período actual.</p>
+                <div class="module-features">
+                    <span class="feature-tag">Horarios</span>
+                    <span class="feature-tag">Profesores</span>
+                    <span class="feature-tag">Aulas asignadas</span>
+                </div>
+                <div class="module-stats">
+                    <span class="stat-item"><i class="fas fa-book-open"></i><span>6 materias activas</span></span>
+                    <span class="stat-item"><i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <a href="#" class="module-card module-trajectory fade-in" onclick="event.preventDefault(); showTrajectory()">
+                <i class="fas fa-route module-icon"></i>
+                <h3 class="module-title">Trayectos y Tramos</h3>
+                <p class="module-description">Seguimiento de tu progreso académico por trayectos, tramos completados y planificación de estudios.</p>
+                <div class="module-features">
+                    <span class="feature-tag">Progreso académico</span>
+                    <span class="feature-tag">Planificación</span>
+                    <span class="feature-tag">Requisitos</span>
+                </div>
+                <div class="module-stats">
+                    <span class="stat-item"><i class="fas fa-map-marked-alt"></i><span>Trayecto III</span></span>
+                    <span class="stat-item"><i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <a href="#" class="module-card module-profile fade-in" onclick="event.preventDefault(); showProfile()">
+                <i class="fas fa-user-edit module-icon"></i>
+                <h3 class="module-title">Datos Personales</h3>
+                <p class="module-description">Actualiza tu información personal, datos de contacto, dirección y otros datos importantes.</p>
+                <div class="module-features">
+                    <span class="feature-tag">Información personal</span>
+                    <span class="feature-tag">Contacto</span>
+                    <span class="feature-tag">Dirección</span>
+                </div>
+                <div class="module-stats">
+                    <span class="stat-item"><i class="fas fa-user-check"></i><span>Perfil actualizado</span></span>
+                    <span class="stat-item"><i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <a href="#" class="module-card module-certificates fade-in" onclick="event.preventDefault(); showCertificates()">
+                <i class="fas fa-certificate module-icon"></i>
+                <h3 class="module-title">Solicitar Constancias</h3>
+                <p class="module-description">Solicita constancias de estudio, notas certificadas y otros documentos oficiales de manera digital.</p>
+                <div class="module-features">
+                    <span class="feature-tag">Constancia de estudio</span>
+                    <span class="feature-tag">Constancia de notas</span>
+                    <span class="feature-tag">Descarga digital</span>
+                </div>
+                <div class="module-stats">
+                    <span class="stat-item"><i class="fas fa-file-download"></i><span>Solicitar ahora</span></span>
+                    <span class="stat-item"><i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <a href="#" class="module-card module-period fade-in" onclick="event.preventDefault(); showPeriodInfo()">
+                <i class="fas fa-calendar-week module-icon"></i>
+                <h3 class="module-title">Información del Período</h3>
+                <p class="module-description">Consulta fechas importantes, calendario académico, períodos de evaluación y eventos del semestre.</p>
+                <div class="module-features">
+                    <span class="feature-tag">Calendario académico</span>
+                    <span class="feature-tag">Fechas importantes</span>
+                    <span class="feature-tag">Evaluaciones</span>
+                </div>
+                <div class="module-stats">
+                    <span class="stat-item"><i class="fas fa-calendar"></i><span>Período 2024-I</span></span>
+                    <span class="stat-item"><i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="recent-activity fade-in">
+            <h3><i class="fas fa-clock"></i> Actividad Reciente</h3>
+            <div class="activity-list">
+                <div class="activity-item activity-grades">
+                    <div class="activity-icon"><i class="fas fa-star"></i></div>
+                    <div class="activity-content">
+                        <div class="activity-title">Nueva calificación registrada</div>
+                        <div class="activity-desc">Programación Orientada a Objetos - Evaluación 2: 18 puntos</div>
+                        <div class="activity-time">Hace 2 horas</div>
+                    </div>
+                </div>
+
+                <div class="activity-item activity-subjects">
+                    <div class="activity-icon"><i class="fas fa-book"></i></div>
+                    <div class="activity-content">
+                        <div class="activity-title">Materia inscrita</div>
+                        <div class="activity-desc">Sistemas Distribuidos - Prof. María González</div>
+                        <div class="activity-time">Hace 1 día</div>
+                    </div>
+                </div>
+
+                <div class="activity-item activity-certificates">
+                    <div class="activity-icon"><i class="fas fa-download"></i></div>
+                    <div class="activity-content">
+                        <div class="activity-title">Constancia generada</div>
+                        <div class="activity-desc">Constancia de notas del período 2023-II descargada</div>
+                        <div class="activity-time">Hace 3 días</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logout Section -->
+        <div class="logout-section">
+            <a href="#" class="logout-btn" onclick="event.preventDefault(); confirmLogout()">
+                <i class="fas fa-sign-out-alt"></i>
+                Cerrar Sesión
+            </a>
+        </div>
+    </div>
+
+    <!-- Contenedor para modal dinámico -->
+    <div id="app-modal-root" style="display:none;"></div>
+
+    <!-- Contenedor para toasts -->
+    <div id="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+    <script>
+        // Animaciones iniciales
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.querySelectorAll('.fade-in, .scale-in').forEach((el, index) => {
+                    setTimeout(() => el.classList.add('show'), index * 80);
+                });
+            }, 120);
+        });
+
+        /* ---------- UTILIDADES DE INTERFAZ ---------- */
+
+        // Muestra una notificación (toast) en pantalla
+        function showNotification(message, type = 'info', duration = 3200) {
+            const root = document.getElementById('toast-root');
+            if (!root) return;
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<strong style="min-width:18px;">${type === 'info' ? 'ℹ️' : type === 'success' ? '✅' : '⚠️'}</strong><div>${message}</div>`;
+            root.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(8px)'; }, duration);
+            setTimeout(() => root.removeChild(toast), duration + 360);
+        }
+
+        // Crea y abre un modal con contenido HTML
+        function showModal({ title = '', html = '', onClose = null, primaryBtn = null }) {
+            const root = document.getElementById('app-modal-root');
+            root.innerHTML = ''; root.style.display = 'block';
+
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            overlay.innerHTML = `
+                <div class="modal" role="dialog" aria-modal="true">
+                    <div class="modal-header">
+                        <h4>${title}</h4>
+                        <div>
+                            <button class="btn ghost" id="modal-close-btn" title="Cerrar"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="modal-body">${html}</div>
+                    <div class="modal-footer" id="modal-footer"></div>
+                </div>
+            `;
+            root.appendChild(overlay);
+
+            // Close handlers
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closeModal(onClose);
+            });
+            overlay.querySelector('#modal-close-btn').addEventListener('click', () => closeModal(onClose));
+
+            // primary button if existe
+            const footer = overlay.querySelector('#modal-footer');
+            if (primaryBtn) {
+                const btn = document.createElement('button');
+                btn.className = 'btn';
+                btn.textContent = primaryBtn.label;
+                btn.addEventListener('click', () => {
+                    if (typeof primaryBtn.action === 'function') primaryBtn.action({ close: () => closeModal(onClose) });
+                });
+                footer.appendChild(btn);
+
+                if (primaryBtn.secondary) {
+                    const sec = document.createElement('button');
+                    sec.className = 'btn ghost';
+                    sec.textContent = primaryBtn.secondary.label;
+                    sec.addEventListener('click', () => {
+                        if (typeof primaryBtn.secondary.action === 'function') primaryBtn.secondary.action({ close: () => closeModal(onClose) });
+                    });
+                    footer.appendChild(sec);
+                }
+            } else {
+                // mostrar botón cerrar por defecto
+                const btn = document.createElement('button');
+                btn.className = 'btn ghost';
+                btn.textContent = 'Cerrar';
+                btn.addEventListener('click', () => closeModal(onClose));
+                footer.appendChild(btn);
+            }
+        }
+
+        function closeModal(onClose) {
+            const root = document.getElementById('app-modal-root');
+            if (!root) return;
+            root.innerHTML = '';
+            root.style.display = 'none';
+            if (typeof onClose === 'function') onClose();
+        }
+
+        /* ---------- FUNCIONALIDADES DE MÓDULOS ---------- */
+
+        // 1) Calificaciones - muestra detalle en modal
+        function showGrades() {
+            // Contenido: tabla de materias y evaluaciones
+            const html = `
+                <div>
+                    <h3 style="margin-bottom:8px;">📊 Mis Calificaciones - Período 2024-I</h3>
+                    <p style="color:#7f8c8d; margin-bottom:12px;">Resumen de evaluaciones y promedios por materia.</p>
+                    <table aria-label="Listado de calificaciones">
+                        <thead>
+                            <tr>
+                                <th>Materia</th>
+                                <th>Eval. 1</th>
+                                <th>Eval. 2</th>
+                                <th>Promedio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Programación Orientada a Objetos</td>
+                                <td>17</td>
+                                <td>18</td>
+                                <td style="font-weight:700; color:#27ae60;">17.5</td>
+                            </tr>
+                            <tr>
+                                <td>Bases de Datos II</td>
+                                <td>19</td>
+                                <td>16</td>
+                                <td style="font-weight:700; color:#27ae60;">17.5</td>
+                            </tr>
+                            <tr>
+                                <td>Redes de Computadoras</td>
+                                <td>18</td>
+                                <td>—</td>
+                                <td style="font-weight:700; color:#f39c12;">18.0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="margin-top:14px; display:flex; gap:12px; flex-wrap:wrap;">
+                        <button class="btn" id="download-grades-btn"><i class="fas fa-file-csv"></i> Descargar CSV</button>
+                        <button class="btn ghost" id="close-grades-btn"><i class="fas fa-times"></i> Cerrar</button>
+                    </div>
+                </div>
+            `;
+
+            showModal({
+                title: 'Mis Calificaciones',
+                html,
+                onClose: null,
+                primaryBtn: null
+            });
+
+            // Añadir listeners para descargar/ cerrar
+            setTimeout(() => {
+                const downloadBtn = document.getElementById('download-grades-btn');
+                const closeBtn = document.getElementById('close-grades-btn');
+
+                if (downloadBtn) downloadBtn.addEventListener('click', () => {
+                    const csv = [
+                        ['Materia','Eval1','Eval2','Promedio'],
+                        ['Programación Orientada a Objetos','17','18','17.5'],
+                        ['Bases de Datos II','19','16','17.5'],
+                        ['Redes de Computadoras','18','—','18.0']
+                    ].map(r => r.join(',')).join('\n');
+
+                    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'calificaciones_2024-I.csv';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    showNotification('CSV de calificaciones descargado.', 'success');
+                });
+
+                if (closeBtn) closeBtn.addEventListener('click', () => closeModal());
+            }, 60);
+        }
+
+        // 2) Materias - tabla con detalles
+        function showSubjects() {
+            const materias = [
+                { codigo: 'INF301', nombre: 'Programación Orientada a Objetos', profesor: 'Ing. Luis Pérez', horario: 'Lun 8:00-10:00', aula: 'A-201' },
+                { codigo: 'INF312', nombre: 'Bases de Datos II', profesor: 'Dra. Ana Torres', horario: 'Mar 10:00-12:00', aula: 'B-103' },
+                { codigo: 'INF324', nombre: 'Redes de Computadoras', profesor: 'MSc. Jorge Ruiz', horario: 'Mié 14:00-16:00', aula: 'C-405' },
+                { codigo: 'INF330', nombre: 'Sistemas Distribuidos', profesor: 'Prof. María González', horario: 'Jue 10:00-12:00', aula: 'A-110' },
+                { codigo: 'MAT201', nombre: 'Matemática Discreta', profesor: 'Dra. Carmen León', horario: 'Vie 8:00-10:00', aula: 'B-201' },
+                { codigo: 'ING101', nombre: 'Inglés Técnico I', profesor: 'Lic. Pedro Díaz', horario: 'Vie 10:00-12:00', aula: 'B-202' }
+            ];
+
+            let rows = materias.map(m => `
+                <tr>
+                    <td><strong>${m.codigo}</strong></td>
+                    <td>${m.nombre}</td>
+                    <td>${m.profesor}</td>
+                    <td>${m.horario}</td>
+                    <td>${m.aula}</td>
+                    <td><button class="btn ghost" data-code="${m.codigo}"><i class="fas fa-eye"></i> Ver</button></td>
+                </tr>
+            `).join('');
+
+            const html = `
+                <div>
+                    <h3>📚 Materias Inscritas - Período 2024-I</h3>
+                    <p style="color:#7f8c8d; margin-bottom:12px;">Lista de materias activas con horario y profesor asignado.</p>
+                    <table aria-label="Materias inscritas">
+                        <thead>
+                            <tr><th>Código</th><th>Materia</th><th>Profesor</th><th>Horario</th><th>Aula</th><th>Acciones</th></tr>
+                        </thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+            `;
+
+            showModal({ title: 'Mis Materias', html });
+
+            // Delegación de evento para botones "Ver"
+            setTimeout(() => {
+                document.querySelectorAll('.modal .btn.ghost').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const code = btn.getAttribute('data-code');
+                        const materia = materias.find(m => m.codigo === code);
+                        if (!materia) return;
+                        const detalle = `
+                            <div>
+                                <h4>${materia.nombre} <small style="color:#7f8c8d;">(${materia.codigo})</small></h4>
+                                <p><strong>Profesor:</strong> ${materia.profesor}</p>
+                                <p><strong>Horario:</strong> ${materia.horario}</p>
+                                <p><strong>Aula:</strong> ${materia.aula}</p>
+                                <p style="margin-top:8px; color:#7f8c8d;">Descripción corta: Esta materia aborda conceptos avanzados relacionados con ${materia.nombre.toLowerCase()}.</p>
+                            </div>
+                        `;
+                        showModal({ title: `Detalle - ${materia.codigo}`, html: detalle });
+                    });
+                });
+            }, 80);
+        }
+
+        // 3) Trayectos y tramos - vista de progreso
+        function showTrajectory() {
+            const html = `
+                <div>
+                    <h3>🗺️ Trayectos y Tramos</h3>
+                    <p style="color:#7f8c8d;">Progreso del trayecto III. Visualice tramos completados y pendientes.</p>
+
+                    <div style="margin-top:12px;">
+                        <label>Trayecto: III (Progreso general)</label>
+                        <div class="progress" aria-hidden="true" style="margin-bottom:8px;"><div id="tray-progress" style="width:0;"></div></div>
+                        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+                            <div style="flex:1; min-width:180px; padding:12px; background:#f8f9fa; border-radius:8px;">
+                                <strong>Tramo 1</strong><br><small>Completado</small>
+                            </div>
+                            <div style="flex:1; min-width:180px; padding:12px; background:#f8f9fa; border-radius:8px;">
+                                <strong>Tramo 2</strong><br><small>En curso</small>
+                            </div>
+                            <div style="flex:1; min-width:180px; padding:12px; background:#f8f9fa; border-radius:8px;">
+                                <strong>Tramo 3</strong><br><small>Pendiente</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            showModal({ title: 'Trayecto y Tramos', html });
+
+            // Animar barra de progreso
+            setTimeout(() => {
+                const bar = document.getElementById('tray-progress');
+                if (bar) bar.style.width = '75%';
+            }, 80);
+        }
+
+        // 4) Datos personales - formulario editable (sólo demo)
+        function showProfile() {
+            const html = `
+                <div>
+                    <h3>👤 Datos Personales</h3>
+                    <p style="color:#7f8c8d;">Actualiza tu información. (Los cambios se simulan en esta demo.)</p>
+                    <form id="profile-form" style="margin-top:12px;">
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:12px;">
+                            <div>
+                                <label>Nombre completo</label>
+                                <input type="text" name="nombre" value="Carlos Eduardo Rodríguez" />
+                            </div>
+                            <div>
+                                <label>Cédula</label>
+                                <input type="text" name="cedula" value="V-25.847.123" />
+                            </div>
+                            <div>
+                                <label>Correo institucional</label>
+                                <input type="email" name="correo" value="c.rodriguez@upt.edu.ve" />
+                            </div>
+                            <div>
+                                <label>Teléfono</label>
+                                <input type="text" name="telefono" value="+58 412-555-1234" />
+                            </div>
+                        </div>
+
+                        <div style="margin-top:10px;">
+                            <label>Dirección</label>
+                            <textarea name="direccion">Av. Universidad, Urbanización La Paz</textarea>
+                        </div>
+
+                        <div style="margin-top:12px; display:flex; gap:10px;">
+                            <button class="btn" type="button" id="save-profile-btn"><i class="fas fa-save"></i> Guardar</button>
+                            <button class="btn ghost" type="button" id="cancel-profile-btn"><i class="fas fa-times"></i> Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            showModal({ title: 'Datos Personales', html });
+
+            setTimeout(() => {
+                const saveBtn = document.getElementById('save-profile-btn');
+                const cancelBtn = document.getElementById('cancel-profile-btn');
+                const form = document.getElementById('profile-form');
+
+                if (saveBtn) saveBtn.addEventListener('click', () => {
+                    // En un sistema real aquí se enviaría por fetch/axios. En esta demo sólo notificamos.
+                    const fd = new FormData(form);
+                    const data = Object.fromEntries(fd.entries());
+                    console.log('Datos guardados (simulado):', data);
+                    showNotification('Perfil guardado correctamente.', 'success');
+                    closeModal();
+                });
+
+                if (cancelBtn) cancelBtn.addEventListener('click', () => closeModal());
+            }, 60);
+        }
+
+        // 5) Solicitar constancias - formulario que genera documento imprimible
+        function showCertificates() {
+            const html = `
+                <div>
+                    <h3>📄 Solicitar Constancias</h3>
+                    <p style="color:#7f8c8d;">Seleccione el tipo de constancia que desea y genere el documento.</p>
+
+                    <form id="cert-form" style="margin-top:12px;">
+                        <label>Tipo de constancia</label>
+                        <select name="tipo" id="tipo-const">
+                            <option value="constancia_estudio">Constancia de Estudio</option>
+                            <option value="constancia_notas">Constancia de Notas</option>
+                            <option value="constancia_regularidad">Constancia de Regularidad</option>
+                        </select>
+
+                        <div style="margin-top:10px;">
+                            <label>Observaciones (opcional)</label>
+                            <textarea name="observ" placeholder="Texto adicional para la constancia..."></textarea>
+                        </div>
+
+                        <div style="margin-top:12px; display:flex; gap:10px;">
+                            <button class="btn" type="button" id="generate-cert-btn"><i class="fas fa-file-alt"></i> Generar</button>
+                            <button class="btn ghost" type="button" id="close-cert-btn">Cerrar</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            showModal({ title: 'Solicitar Constancias', html });
+
+            setTimeout(() => {
+                document.getElementById('close-cert-btn').addEventListener('click', closeModal);
+                document.getElementById('generate-cert-btn').addEventListener('click', () => {
+                    const tipo = document.getElementById('tipo-const').value;
+                    const observ = document.querySelector('#cert-form textarea').value || '';
+
+                    const tiposLabel = {
+                        'constancia_estudio': 'Constancia de Estudio',
+                        'constancia_notas': 'Constancia de Notas',
+                        'constancia_regularidad': 'Constancia de Regularidad'
+                    };
+                    const ahora = new Date();
+                    const fechaStr = ahora.toLocaleDateString('es-VE', { day:'2-digit', month:'long', year:'numeric' });
+
+                    const content = `
+                        <div style="font-family: Arial, Helvetica, sans-serif; padding:28px; color:#222;">
+                            <div style="text-align:center; margin-bottom:18px;">
+                                <h2 style="margin:0;">UNIVERSIDAD POLITÉCNICA TERRITORIAL "JOSÉ FÉLIX RIBAS"</h2>
+                                <small>Venezuela</small>
+                            </div>
+                            <hr style="border:none; border-top:1px solid #ddd; margin:12px 0 18px;">
+                            <h3 style="margin-bottom:6px;">${tiposLabel[tipo]}</h3>
+                            <p>Por la presente se certifica que <strong>Carlos Eduardo Rodríguez</strong>, C.I. <strong>V-25.847.123</strong>, se encuentra registrado como estudiante de la carrera <strong>Ingeniería en Informática</strong> en el período <strong>2024-I</strong>.</p>
+                            ${ observ ? `<p><strong>Observaciones:</strong> ${observ}</p>` : '' }
+                            <p style="margin-top:20px;">Emitido el ${fechaStr}.</p>
+                            <div style="margin-top:40px; display:flex; justify-content:space-between; align-items:center;">
+                                <div style="text-align:center;">
+                                    <hr style="width:220px; border:none; border-top:1px solid #ccc;">
+                                    <div style="font-size:0.95rem;">Secretaría Académica</div>
+                                </div>
+                                <div style="text-align:center;">
+                                    <hr style="width:220px; border:none; border-top:1px solid #ccc;">
+                                    <div style="font-size:0.95rem;">Vº Bº Dirección</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Abrir nueva ventana con contenido imprimible
+                    const w = window.open('', '_blank', 'noopener,noreferrer,width=900,height=700');
+                    if (!w) {
+                        showNotification('Abra ventanas emergentes bloqueadas para generar la constancia.', 'warning');
+                        return;
+                    }
+                    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Constancia</title></head><body>' + content + '</body></html>');
+                    w.document.close();
+                    // Instruir al usuario a imprimir (acción inmediata en ventana nueva)
+                    w.focus();
+                    // Opcional: lanzar diálogo de impresión automáticamente
+                    w.print();
+
+                    showNotification('Constancia generada en nueva ventana. Puede imprimirla o guardarla como PDF.', 'success');
+                    closeModal();
+                });
+            }, 80);
+        }
+
+        // 6) Información del período - calendario / fechas
+        function showPeriodInfo() {
+            const fechas = [
+                { fecha: '2024-02-01', titulo: 'Inicio de clases - 2024-I' },
+                { fecha: '2024-03-15', titulo: 'Entrega de calificaciones parciales' },
+                { fecha: '2024-05-10', titulo: 'Evaluaciones finales' },
+                { fecha: '2024-05-20', titulo: 'Cierre de período' },
+                { fecha: '2024-06-01', titulo: 'Publicación de actas' }
+            ];
+
+            const rows = fechas.map(f => `<tr><td>${new Date(f.fecha).toLocaleDateString('es-VE')}</td><td>${f.titulo}</td></tr>`).join('');
+
+            const html = `
+                <div>
+                    <h3>📅 Calendario Académico - 2024-I</h3>
+                    <p style="color:#7f8c8d;">Fechas más relevantes del período.</p>
+                    <table aria-label="Fechas del periodo">
+                        <thead><tr><th>Fecha</th><th>Evento</th></tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+            `;
+            showModal({ title: 'Información del Período', html });
+        }
+
+        // Confirmación de cierre de sesión
+        function confirmLogout() {
+            const confirmed = confirm('¿Desea cerrar sesión?');
+            if (confirmed) {
+                showNotification('Sesión cerrada. Redirigiendo...', 'info');
+                // En una app real se realizaría la petición al backend; en esta demo redirigimos a la página principal
+                setTimeout(() => {
+                    // Simular redirección
+                    window.location.href = '/';
+                }, 600);
+            } else {
+                showNotification('Acción cancelada.', 'info');
+            }
+        }
+
+    </script>
+</body>
+</html>

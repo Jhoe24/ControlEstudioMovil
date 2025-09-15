@@ -481,7 +481,7 @@
             <div class="university-logo">
                 <i class="fas fa-graduation-cap"></i>
             </div>
-            <h1 class="university-name">Universidad Venezolana</h1>
+            <h1 class="university-name">Upt "Jose Felix Ribas"</h1>
             <p class="university-subtitle">Excelencia Académica Nacional</p>
         </div>
         
@@ -491,7 +491,7 @@
         <div class="email-content">
             <div class="welcome-title">
                 <i class="fas fa-graduation-cap"></i>
-                <span>¡BIENVENIDO/A!</span>
+                <span>¡BIENVENIDO/A, {{ nombre }} {{apellido}}!</span>
             </div>
             
             <div class="welcome-subtitle">
@@ -499,7 +499,7 @@
             </div>
 
             <div class="email-body">
-                <p><strong>¡Felicitaciones y bienvenido/a a la Universidad Venezolana!</strong></p>
+                <p><strong>¡Felicitaciones y bienvenido/a a la Universidad Politecnica Territorial "Jose Felix Ribas" del estado Barinas!</strong></p>
                 
                 <p>Nos complace informarte que tu proceso de preinscripción ha sido completado exitosamente. Ahora formas parte de nuestra prestigiosa comunidad académica, donde miles de estudiantes han forjado su futuro profesional.</p>
 
@@ -513,31 +513,37 @@
                     <span class="data-label">
                         <i class="fas fa-user"></i> Nombre Completo:
                     </span>
-                    <span class="data-value">María José González Rodríguez</span>
+                    <span class="data-value">{{ nombre }} {{ apellido }}</span>
                 </div>
                 <div class="data-row">
                     <span class="data-label">
                         <i class="fas fa-id-card"></i> Cédula:
                     </span>
-                    <span class="data-value">V-28.456.789</span>
+                    <span class="data-value">{{ cedula }}</span>
                 </div>
                 <div class="data-row">
                     <span class="data-label">
                         <i class="fas fa-envelope"></i> Email Institucional:
                     </span>
-                    <span class="data-value">maria.gonzalez@estudiante.univ.edu.ve</span>
+                    <span class="data-value">{{ email }}</span>
                 </div>
                 <div class="data-row">
                     <span class="data-label">
                         <i class="fas fa-graduation-cap"></i> Carrera:
                     </span>
-                    <span class="data-value">Ingeniería en Sistemas</span>
+                    <span class="data-value">{{ carrera }}</span>
                 </div>
                 <div class="data-row">
                     <span class="data-label">
                         <i class="fas fa-calendar"></i> Período de Ingreso:
                     </span>
-                    <span class="data-value">2025-I</span>
+                    <span class="data-value">{{ periodo }}</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">
+                        <i class="fas fa-key"></i> Contraseña Temporal:
+                    </span>
+                    <span class="data-value">{{ clave }}</span>
                 </div>
             </div>
 
@@ -611,7 +617,7 @@
             </div>
 
             <div class="contact-info">
-                <h4><i class="fas fa-university"></i> Universidad Venezolana</h4>
+                <h4><i class="fas fa-university"></i> Universidad UPT</h4>
                 <div class="contact-item">
                     <i class="fas fa-envelope"></i>
                     <a href="mailto:info@universidad.edu.ve">info@universidad.edu.ve</a>
@@ -626,14 +632,14 @@
                 </div>
                 <div class="contact-item">
                     <i class="fas fa-map-marker-alt"></i>
-                    Caracas, Venezuela
+                    Barinas, Venezuela
                 </div>
             </div>
 
             <div class="footer-disclaimer">
-                <p><strong>Universidad Venezolana</strong> - Formando líderes para el futuro de Venezuela desde 1970.</p>
+                <p><strong>Universidad UPT</strong> - Formando líderes para el futuro de Venezuela.</p>
                 <p>Este mensaje fue enviado automáticamente. Para consultas específicas, utiliza nuestros canales oficiales de soporte.</p>
-                <p>&copy; 2025 Universidad Venezolana. Todos los derechos reservados.</p>
+                <p>&copy; 2025 Universidad UPT. Todos los derechos reservados.</p>
             </div>
         </div>
         

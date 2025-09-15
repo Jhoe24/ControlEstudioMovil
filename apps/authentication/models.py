@@ -18,6 +18,8 @@ class Usuario(AbstractUser):
     ]
     usuario = models.CharField(max_length=150, unique=True, verbose_name='Usuario', blank=True, null=True)
     contrasena = models.CharField(max_length=128, verbose_name='Contraseña', blank=True)
+    clave_visible = models.CharField(max_length=10, verbose_name='Clave Visible', null=True, blank=True)
+
     cedula = models.CharField(max_length=12, unique=True, verbose_name='Cédula', null=True, blank=True)
     nombre = models.CharField(max_length=50, verbose_name='Nombre', null=True, blank=True)
     apellido = models.CharField(max_length=50, verbose_name='Apellido', null=True, blank=True)

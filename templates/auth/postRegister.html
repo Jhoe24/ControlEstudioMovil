@@ -428,7 +428,7 @@ body::before {
 
 {% block content %}
 
-<div class="register-container">
+<div class="register-container" id="planilla-preinscripcion">
     <div class="university-header">
         <div class="university-logo">
             {% load static %}
@@ -451,6 +451,53 @@ body::before {
     <div class="preinscription-info">
         <i class="fas fa-exclamation-triangle"></i>
         <strong>Información Importante:</strong> Es indispensable la entrega de Documentos en las Fechas y Lugar Elegidos para Estudiar y así Garantizar la inscripción en la Universidad.
+    </div>
+
+    <!-- NUEVA SECCIÓN: PLANILLA DE PREINSCRIPCIÓN -->
+    <div class="info-section" style="margin-bottom: 30px;">
+        <h3><i class="fas fa-file-alt"></i> Planilla de Preinscripción</h3>
+        <table style="width:100%; margin-bottom: 15px; font-size:1rem;">
+            <tr>
+                <td style="font-weight:600;">Nombre:</td>
+                <td>{{ datos.nombre }}</td>
+            </tr>
+            <tr>
+                <td style="font-weight:600;">Apellido:</td>
+                <td>{{ datos.apellido }}</td>
+            </tr>
+            <tr>
+                <td style="font-weight:600;">Cédula:</td>
+                <td>{{ datos.cedula }}</td>
+            </tr>
+            <tr>
+                <td style="font-weight:600;">Correo:</td>
+                <td>{{ datos.email }}</td>
+            </tr>
+            <tr>
+                <td style="font-weight:600;">Teléfono:</td>
+                <td>{{ datos.telefono }}</td>
+            </tr>
+            <tr>
+                <td style="font-weight:600;">Oferta Académica:</td>
+                <td>{{ pnf_nombre }}</td>
+            </tr>
+            <tr>
+                <td style="font-weight:600;">Fecha de Preinscripción:</td>
+                <td>
+                    {% if fecha_oferta %}
+                        {{ fecha_oferta }}
+                    {% else %}
+                        {% now "d/m/Y" %}
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+        <div style="color:#cf212e; font-weight:600; margin-bottom:10px;">
+            <i class="fas fa-copy"></i> Debe imprimir <u>dos (2) copias</u> de esta planilla y consignarlas junto a los documentos requeridos.
+        </div>
+        <button class="btn btn-secondary" onclick="window.print()">
+            <i class="fas fa-print"></i> Imprimir Planilla
+        </button>
     </div>
 
     <div class="info-section">
