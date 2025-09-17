@@ -1,12 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
-class PNF(models.Model):
-    nombre = models.CharField(max_length=150, verbose_name='Programa Nacional de Formación')
-    sede = models.CharField(max_length=50, verbose_name='Sede')
-
-    def __str__(self):
-        return f"{self.nombre} ({self.sede})"
+from apps.core.models import PNF  
 
 class Usuario(AbstractUser):
     ROL_CHOICES = [
@@ -29,6 +23,7 @@ class Usuario(AbstractUser):
     pnf = models.ForeignKey(PNF, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Oferta Académica')
     rol = models.CharField(max_length=20, choices=ROL_CHOICES, default='estudiante', verbose_name='Rol')
 
+
     def __str__(self):
         return self.usuario
 
@@ -42,3 +37,7 @@ class Usuario(AbstractUser):
         if not self.contrasena:
             self.contrasena = self.password
         super().save(*args, **kwargs)
+        
+        
+        
+     

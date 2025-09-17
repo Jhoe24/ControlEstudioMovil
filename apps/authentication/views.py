@@ -9,6 +9,23 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+import sqlite3
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+
+def rol_requerido(roles_permitidos):
+    def decorator(view_func):
+        def _wrapped_view(request, *args, **kwargs):
+            if not request.user.is_authenticated:
+                return redirect('login')
+            if request.user.rol not in roles_permitidos:
+                return redirect('login')
+            return view_func(request, *args, **kwargs)
+        return _wrapped_view
+    return decorator
 
 def login_view(request):
     form = LoginForm(request.POST or None)
@@ -174,6 +191,8 @@ def registration_success(request):
         'fecha_oferta': fecha_oferta,
     })
 
+@login_required
+@rol_requerido(['personal'])
 def administrativo_panel(request):
     estudiantes_pendientes = Usuario.objects.filter(rol='estudiante', is_active=False)
     estudiantes_verificados_list = Usuario.objects.filter(rol='estudiante', is_active=True)
@@ -228,26 +247,70 @@ def aceptar_estudiante(request, estudiante_id):
     return redirect('panel_administrativo')
 
 
+@login_required
+@rol_requerido(['estudiante'])
 def estudiante_portal(request):
     return render(request, 'estudiante/portal.html')
 
+@login_required
+@rol_requerido(['docente'])
 def docente_portal(request):
     return render(request, 'docente/portal.html')
 
+@login_required
+@rol_requerido(['coordinador'])
 def coodinador_panel(request):
     return render(request, 'coordinador/panel.html')
 
-
-
-
+@login_required
+@rol_requerido(['jefe'])
 def jefe_panel(request):
     return render(request, 'control_estudio/panel.html')
 
 
-def error_404_view(request):
+def error_404_view(request, exception):
     return render(request, 'error/404.html', status=404)
 
 def error_500_view(request):
     return render(request, 'error/500.html', status=500)
+
+@csrf_exempt
+def exportar_verificados(request):
+    if request.method == 'POST':
+        # Filtra solo estudiantes verificados
+        estudiantes = Usuario.objects.filter(rol='estudiante', is_active=True, verificado=True)
+        # Conexión a la base de datos externa
+        conn = sqlite3.connect('ruta/a/tu/archivo_externo.db')
+        cursor = conn.cursor()
+        # Crea la tabla si no existe
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS estudiantes_verificados (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nombre TEXT,
+                apellido TEXT,
+                cedula TEXT,
+                email TEXT,
+                carrera TEXT,
+                fecha_registro TEXT
+            )
+        ''')
+        # Inserta los datos
+        for est in estudiantes:
+            cursor.execute('''
+                INSERT INTO estudiantes_verificados (nombre, apellido, cedula, email, carrera, fecha_registro)
+                VALUES (?, ?, ?, ?, ?, ?)
+            ''', (
+                est.nombre,
+                est.apellido,
+                est.cedula,
+                est.email,
+                str(est.pnf) if est.pnf else '',
+                est.date_joined.strftime('%Y-%m-%d')
+            ))
+        conn.commit()
+        conn.close()
+        return JsonResponse({'mensaje': 'Estudiantes exportados exitosamente.', 'status': 'success'})
+    return JsonResponse({'mensaje': 'Método no permitido.', 'status': 'error'})
+
 
 

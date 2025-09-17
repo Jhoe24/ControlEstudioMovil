@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'pwa',
+    'apps.core',
     'apps.authentication'
 ]
 AUTH_USER_MODEL = 'authentication.Usuario'
@@ -113,7 +114,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 #   'http://192.168.10.183:8888/' o /static/
-STATIC_URL = 'http://192.168.10.183:8888/'
+STATIC_URL = 'http://192.168.10.161:8888/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]

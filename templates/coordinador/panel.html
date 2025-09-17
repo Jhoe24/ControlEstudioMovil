@@ -1,489 +1,2035 @@
-{% extends "base.html" %}
-{% load static %}
-{% block extra_css %}
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    body {
-        font-family: "Arial", sans-serif;
-        background-image: url("../images/img/logo.jpg"), linear-gradient(135deg, #74ebd5, #acb6e5);
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        min-height: 100vh;
-        height: 100vh;
-        overflow: auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-    }
-    body::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image: radial-gradient(
-            circle at 20% 80%,
-            rgba(255, 204, 0, 0.1) 0%,
-            transparent 50%
-        ),
-        radial-gradient(
-            circle at 80% 20%,
-            rgba(0, 114, 206, 0.1) 0%,
-            transparent 50%
-        ),
-        radial-gradient(
-            circle at 40% 40%,
-            rgba(207, 33, 46, 0.1) 0%,
-            transparent 50%
-        );
-    }
-    .coordinator-portal-container {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
-        width: 100%;
-        max-width: 1200px;
-        max-height: 80vh;
-        overflow-y: auto;
-        padding: 40px;
-        position: relative;
-        z-index: 1;
-    }
-    .university-header {
-        text-align: center;
-        margin-bottom: 35px;
-    }
-    .university-logo {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        margin: 0 auto 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        color: white;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-    .university-name {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #2c3e50;
-        margin-bottom: 5px;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-    .university-subtitle {
-        color: #7f8c8d;
-        font-size: 0.9rem;
-        font-weight: 300;
-    }
-    .patriotic-banner {
-        height: 5px;
-        background: linear-gradient(
-            to right,
-            #ffcc00 33.33%,
-            #0072ce 33.33%,
-            #0072ce 66.66%,
-            #cf212e 66.66%
-        );
-        border-radius: 3px;
-        margin: 25px 0;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-    .panel-header {
-        text-align: center;
-        margin-bottom: 40px;
-    }
-    .coordinator-badge {
-        background: linear-gradient(135deg, #9b59b6, #8e44ad);
-        color: white;
-        padding: 12px 25px;
-        border-radius: 25px;
-        font-size: 1.2rem;
-        font-weight: 600;
-        margin-bottom: 15px;
-        display: inline-flex;
-        align-items: center;
-        box-shadow: 0 8px 25px rgba(155, 89, 182, 0.3);
-    }
-    .coordinator-badge i {
-        margin-right: 10px;
-        font-size: 1.3rem;
-    }
-    .panel-title {
-        color: #2c3e50;
-        font-size: 1.8rem;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-    .welcome-message {
-        background: linear-gradient(
-            135deg,
-            rgba(155, 89, 182, 0.1),
-            rgba(255, 204, 0, 0.1)
-        );
-        border-left: 4px solid #9b59b6;
-        padding: 20px;
-        margin-bottom: 30px;
-        border-radius: 8px;
-        font-size: 1rem;
-        color: #2c3e50;
-    }
-    .welcome-message i {
-        color: #9b59b6;
-        margin-right: 10px;
-        font-size: 1.2rem;
-    }
-    /* Grid de módulos del coordinador */
-    .coordinator-modules {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 25px;
-        margin-bottom: 30px;
-    }
-    .module-card {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 15px;
-        padding: 25px;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        border-left: 5px solid transparent;
-        cursor: pointer;
-        text-decoration: none;
-        color: inherit;
-        display: block;
-    }
-    .module-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-        text-decoration: none;
-        color: inherit;
-    }
-    .module-card.courses {
-        border-left-color: #9b59b6;
-    }
-    .module-card.courses:hover {
-        background: linear-gradient(135deg, rgba(155, 89, 182, 0.05), rgba(255, 255, 255, 0.9));
-    }
-    .module-card.teachers {
-        border-left-color: #27ae60;
-    }
-    .module-card.teachers:hover {
-        background: linear-gradient(135deg, rgba(39, 174, 96, 0.05), rgba(255, 255, 255, 0.9));
-    }
-    .module-card.students {
-        border-left-color: #3498db;
-    }
-    .module-card.students:hover {
-        background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(255, 255, 255, 0.9));
-    }
-    .module-card.reports {
-        border-left-color: #e74c3c;
-    }
-    .module-card.reports:hover {
-        background: linear-gradient(135deg, rgba(231, 76, 60, 0.05), rgba(255, 255, 255, 0.9));
-    }
-    .module-card.schedule {
-        border-left-color: #f39c12;
-    }
-    .module-card.schedule:hover {
-        background: linear-gradient(135deg, rgba(243, 156, 18, 0.05), rgba(255, 255, 255, 0.9));
-    }
-    .module-card.settings {
-        border-left-color: #7f8c8d;
-    }
-    .module-card.settings:hover {
-        background: linear-gradient(135deg, rgba(127, 140, 141, 0.05), rgba(255, 255, 255, 0.9));
-    }
-    .module-icon {
-        font-size: 2.5rem;
-        margin-bottom: 15px;
-        display: block;
-    }
-    .module-card.courses .module-icon { color: #9b59b6; }
-    .module-card.teachers .module-icon { color: #27ae60; }
-    .module-card.students .module-icon { color: #3498db; }
-    .module-card.reports .module-icon { color: #e74c3c; }
-    .module-card.schedule .module-icon { color: #f39c12; }
-    .module-card.settings .module-icon { color: #7f8c8d; }
-    .module-title {
-        font-size: 1.3rem;
-        font-weight: 600;
-        color: #2c3e50;
-        margin-bottom: 8px;
-    }
-    .module-description {
-        color: #7f8c8d;
-        font-size: 0.9rem;
-        line-height: 1.5;
-        margin-bottom: 15px;
-    }
-    .module-stats {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 0.85rem;
-        color: #95a5a6;
-    }
-    .stat-item {
-        display: flex;
-        align-items: center;
-    }
-    .stat-item i {
-        margin-right: 5px;
-    }
-    /* Panel de estadísticas rápidas */
-    .quick-stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
-    }
-    .stat-card {
-        background: rgba(255, 255, 255, 0.9);
-        padding: 20px;
-        border-radius: 12px;
-        text-align: center;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-    }
-    .stat-card:hover {
-        transform: translateY(-3px);
-    }
-    .stat-number {
-        font-size: 2.2rem;
-        font-weight: bold;
-        margin-bottom: 8px;
-    }
-    .stat-card.courses .stat-number { color: #9b59b6; }
-    .stat-card.teachers .stat-number { color: #27ae60; }
-    .stat-card.students .stat-number { color: #3498db; }
-    .stat-card.pending .stat-number { color: #e74c3c; }
-    .stat-label {
-        color: #7f8c8d;
-        font-size: 0.9rem;
-        font-weight: 500;
-    }
-    /* Logout button */
-    .logout-section {
-        text-align: center;
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px solid #ecf0f1;
-    }
-    .logout-btn {
-        background: linear-gradient(135deg, #e74c3c, #9b59b6);
-        color: white;
-        padding: 12px 25px;
-        border: none;
-        border-radius: 10px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
-    }
-    .logout-btn i {
-        margin-right: 8px;
-    }
-    .logout-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(231, 76, 60, 0.4);
-        text-decoration: none;
-        color: white;
-    }
-    @media (max-width: 768px) {
-        .coordinator-portal-container {
-            margin: 10px;
-            padding: 30px 25px;
-            max-width: 95%;
-        }
-        .panel-title {
-            font-size: 1.5rem;
-        }
-        .quick-stats {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-    @media (max-width: 480px) {
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Portal del Coordinador - UPT José Félix Ribas</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* ---------- Estilos base heredados del portal de estudiantes ---------- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            padding: 10px 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 50%, #a8edea 100%);
+            min-height: 100vh; padding: 20px;
         }
         .coordinator-portal-container {
-            padding: 25px 20px;
+            background: rgba(255,255,255,0.96); backdrop-filter: blur(15px);
+            border-radius: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            max-width: 1400px; margin: 0 auto; padding: 40px;
+            border: 1px solid rgba(255,255,255,0.3); position: relative; overflow: hidden;
         }
-        .panel-title {
-            font-size: 1.5rem;
+        .coordinator-portal-container::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(106,17,203,0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(37,117,252,0.05) 0%, transparent 50%);
+            pointer-events: none;
         }
-        .quick-stats {
-            grid-template-columns: 1fr;
+        .university-header { text-align: center; margin-bottom: 30px; position: relative; z-index: 1; }
+        .university-logo {
+            width: 90px; height: 90px; background: linear-gradient(135deg, #6a11cb, #2575fc);
+            border-radius: 50%; margin: 0 auto 20px; display:flex; align-items:center; justify-content:center;
+            font-size:2.2rem; color:white; box-shadow:0 12px 35px rgba(106,17,203,0.3); border:3px solid rgba(255,255,255,0.2);
         }
-        .stat-number {
-            font-size: 1.8rem;
+        .university-name {
+            font-size:2rem; font-weight:700; background: linear-gradient(135deg, #6a11cb, #2575fc);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:8px;
         }
-    }
-</style>
-{% endblock %}
-{% block content %}
-<div class="coordinator-portal-container">
-    <div class="university-header">
-        <div class="university-logo">
-            {% load static %}
-            <img src="{% static 'images/icons/icon-512x512.png' %}" alt="Logo Universidad" style="width: 60%; height: 60%;">
-        </div>
-        <h1 class="university-name">UPT "Jose Felix Ribas"</h1>
-        <p class="university-subtitle">Excelencia Académica Nacional</p>
-    </div>
-    <div class="patriotic-banner"></div>
-    <div class="panel-header">
-        <div class="coordinator-badge">
-            <i class="fas fa-user-tie"></i>
-            Portal del Coordinador
-        </div>
-        <h2 class="panel-title">Bienvenido/a {{ user.get_full_name|default:"Coordinador" }}</h2>
-    </div>
-    <div class="welcome-message">
-        <i class="fas fa-info-circle"></i>
-        Aquí encontrarás herramientas para gestionar los cursos, docentes y estudiantes de tu área académica.
-    </div>
-    <!-- Estadísticas Rápidas -->
-    <div class="quick-stats">
-        <div class="stat-card courses">
-            <div class="stat-number">15</div>
-            <div class="stat-label">Cursos Activos</div>
-        </div>
-        <div class="stat-card teachers">
-            <div class="stat-number">25</div>
-            <div class="stat-label">Docentes</div>
-        </div>
-        <div class="stat-card students">
-            <div class="stat-number">320</div>
-            <div class="stat-label">Estudiantes</div>
-        </div>
-        <div class="stat-card pending">
-            <div class="stat-number">8</div>
-            <div class="stat-label">Solicitudes Pendientes</div>
-        </div>
-    </div>
-    <!-- Módulos del Coordinador -->
-    <div class="coordinator-modules">
-        <a href="#" class="module-card courses">
-            <i class="fas fa-book module-icon"></i>
-            <h3 class="module-title">Gestión de Cursos</h3>
-            <p class="module-description">Administra los cursos de tu área, asignación de aulas y horarios.</p>
-            <div class="module-stats">
-                <span class="stat-item"><i class="fas fa-book"></i> 15 activos</span>
-                <span class="stat-item"><i class="fas fa-calendar"></i> Ver calendario</span>
-            </div>
-        </a>
-        <a href="#" class="module-card teachers">
-            <i class="fas fa-chalkboard-teacher module-icon"></i>
-            <h3 class="module-title">Gestión de Docentes</h3>
-            <p class="module-description">Asigna docentes a cursos, gestiona horarios y evaluaciones.</p>
-            <div class="module-stats">
-                <span class="stat-item"><i class="fas fa-user-tie"></i> 25 docentes</span>
-                <span class="stat-item"><i class="fas fa-calendar-alt"></i> Ver horarios</span>
-            </div>
-        </a>
-        <a href="#" class="module-card students">
-            <i class="fas fa-user-graduate module-icon"></i>
-            <h3 class="module-title">Seguimiento de Estudiantes</h3>
-            <p class="module-description">Monitorea el rendimiento académico y asistencia de los estudiantes.</p>
-            <div class="module-stats">
-                <span class="stat-item"><i class="fas fa-users"></i> 320 estudiantes</span>
-                <span class="stat-item"><i class="fas fa-chart-line"></i> Ver estadísticas</span>
-            </div>
-        </a>
-        <a href="#" class="module-card reports">
-            <i class="fas fa-chart-bar module-icon"></i>
-            <h3 class="module-title">Reportes Académicos</h3>
-            <p class="module-description">Genera reportes académicos, estadísticas de rendimiento y asistencia.</p>
-            <div class="module-stats">
-                <span class="stat-item"><i class="fas fa-file-alt"></i> 45 reportes</span>
-                <span class="stat-item"><i class="fas fa-download"></i> Exportar datos</span>
-            </div>
-        </a>
-        <a href="#" class="module-card schedule">
-            <i class="fas fa-calendar-alt module-icon"></i>
-            <h3 class="module-title">Gestión de Horarios</h3>
-            <p class="module-description">Administra los horarios de cursos, docentes y aulas.</p>
-            <div class="module-stats">
-                <span class="stat-item"><i class="fas fa-calendar"></i> Ver calendario</span>
-                <span class="stat-item"><i class="fas fa-clock"></i> Configurar horarios</span>
-            </div>
-        </a>
-        <a href="#" class="module-card settings">
-            <i class="fas fa-cog module-icon"></i>
-            <h3 class="module-title">Configuración</h3>
-            <p class="module-description">Personaliza tu experiencia en el portal y ajusta tus preferencias.</p>
-            <div class="module-stats">
-                <span class="stat-item"><i class="fas fa-sliders-h"></i> Preferencias</span>
-                <span class="stat-item"><i class="fas fa-palette"></i> Tema</span>
-            </div>
-        </a>
-    </div>
-    <!-- Logout -->
-    <div class="logout-section">
-        <a href="{% url 'logout' %}" class="logout-btn">
-            <i class="fas fa-sign-out-alt"></i>
-            Cerrar Sesión
-        </a>
-    </div>
-</div>
-<script>
-    // Efectos de animación al cargar
-    document.addEventListener('DOMContentLoaded', function() {
-        const container = document.querySelector('.coordinator-portal-container');
-        container.style.opacity = '0';
-        container.style.transform = 'translateY(50px)';
+        .university-subtitle { color:#7f8c8d; font-size:1.1rem; font-weight:400; margin-bottom:25px; }
+        .patriotic-banner { height:6px; background: linear-gradient(to right, #ffcc00 33.33%, #0072ce 33.33%, #0072ce 66.66%, #cf212e 66.66%); border-radius:3px; margin:25px 0; box-shadow:0 3px 15px rgba(0,0,0,0.1); }
 
-        setTimeout(() => {
-            container.style.transition = 'all 0.6s ease';
-            container.style.opacity = '1';
-            container.style.transform = 'translateY(0)';
-        }, 100);
-        // Animación secuencial de las tarjetas
-        const cards = document.querySelectorAll('.module-card');
-        cards.forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-                card.style.transition = 'all 0.5s ease';
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, 400 + (index * 100));
-        });
-        // Animación de estadísticas
-        const statCards = document.querySelectorAll('.stat-card');
-        statCards.forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'scale(0.8)';
-            setTimeout(() => {
-                card.style.transition = 'all 0.5s ease';
-                card.style.opacity = '1';
-                card.style.transform = 'scale(1)';
-            }, 200 + (index * 80));
-        });
-    });
-    // Confirmación para logout
-    document.querySelector('.logout-btn').addEventListener('click', function(e) {
-        if (!confirm('¿Está seguro que desea cerrar sesión?')) {
-            e.preventDefault();
+        .coordinator-info-header {
+            background: linear-gradient(135deg, rgba(106,17,203,0.1), rgba(37,117,252,0.1));
+            padding:25px; border-radius:15px; margin-bottom:35px; border:1px solid rgba(106,17,203,0.2);
+            position: relative; z-index:1;
         }
-    });
-</script>
-{% endblock %}
+        .coordinator-badge {
+            background: linear-gradient(135deg, #6a11cb, #2575fc); color:white; padding:15px 30px; border-radius:30px;
+            font-size:1.3rem; font-weight:600; display:inline-flex; align-items:center; box-shadow:0 10px 30px rgba(106,17,203,0.3);
+            margin-bottom:20px;
+        }
+        .coordinator-badge i { margin-right:12px; font-size:1.5rem; }
+        .coordinator-details { display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px; margin-top:20px; }
+        .detail-item { display:flex; align-items:center; gap:10px; color:#2c3e50; font-size:1rem; }
+        .detail-item i { color:#6a11cb; width:20px; text-align:center; }
+        .detail-value { font-weight:600; }
+
+        .academic-summary { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:20px; margin-bottom:40px; }
+        .summary-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+            padding: 25px 20px; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.1);
+            text-align:center; position:relative; overflow:hidden; transition:all 0.3s ease; border-top:4px solid var(--card-color);
+        }
+        .summary-card:hover { transform: translateY(-5px); box-shadow:0 15px 40px rgba(0,0,0,0.15); }
+        .summary-card::after { content:''; position:absolute; top:0; right:0; width:60px; height:60px; background:var(--card-color); opacity:0.1; border-radius:50%; transform:translate(20px,-20px); }
+        .summary-number { font-size:2.5rem; font-weight:700; color:var(--card-color); margin-bottom:10px; }
+        .summary-label { color:#7f8c8d; font-size:0.95rem; font-weight:500; margin-bottom:8px; }
+        .summary-detail { color:#95a5a6; font-size:0.8rem; }
+
+        .card-programs { --card-color: #6a11cb; }
+        .card-teachers { --card-color: #27ae60; }
+        .card-students { --card-color: #0072ce; }
+        .card-subjects { --card-color: #f39c12; }
+        .card-reports { --card-color: #e74c3c; }
+        .card-requests { --card-color: #9b59b6; }
+
+        .coordinator-modules { display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:25px; margin-bottom:40px; }
+        .module-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+            border-radius:18px; padding:30px; box-shadow:0 12px 35px rgba(0,0,0,0.1); transition:all 0.3s ease;
+            cursor:pointer; text-decoration:none; color:inherit; position:relative; overflow:hidden; border:1px solid rgba(255,255,255,0.3);
+        }
+        .module-card::before { content:''; position:absolute; top:0; left:0; right:0; height:5px; background:var(--module-color); }
+        .module-card:hover { transform: translateY(-8px); box-shadow:0 20px 50px rgba(0,0,0,0.15); text-decoration:none; color:inherit; }
+        .module-card:hover .module-icon { transform: scale(1.1); }
+        .module-icon { font-size:3rem; color:var(--module-color); margin-bottom:20px; transition:transform 0.3s ease; display:block; }
+        .module-title { font-size:1.4rem; font-weight:700; color:#2c3e50; margin-bottom:12px; }
+        .module-description { color:#7f8c8d; font-size:1rem; line-height:1.6; margin-bottom:20px; }
+        .module-features { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; }
+        .feature-tag { background: rgba(106,17,203,0.1); color:#6a11cb; padding:5px 12px; border-radius:15px; font-size:0.8rem; font-weight:500; }
+        .module-stats { display:flex; justify-content:space-between; align-items:center; font-size:0.9rem; color:#95a5a6; }
+        .stat-item { display:flex; align-items:center; gap:5px; }
+
+        .module-programs { --module-color: #6a11cb; }
+        .module-subjects { --module-color: #f39c12; }
+        .module-assignments { --module-color: #27ae60; }
+        .module-monitoring { --module-color: #0072ce; }
+        .module-reports { --module-color: #e74c3c; }
+        .module-profile { --module-color: #9b59b6; }
+        .module-grades { --module-color: #f39c12; }
+        .module-enrollment { --module-color: #34495e; }
+        .module-academic { --module-color: #16a085; }
+        .module-schedule { --module-color: #d35400; }
+
+        .recent-activity { background: rgba(255,255,255,0.9); padding:30px; border-radius:18px; box-shadow:0 10px 30px rgba(0,0,0,0.1); margin-bottom:30px; }
+        .recent-activity h3 { font-size:1.5rem; color:#2c3e50; margin-bottom:25px; display:flex; align-items:center; gap:12px; }
+        .recent-activity h3 i { color:#6a11cb; }
+        .activity-list { display:grid; gap:15px; }
+        .activity-item {
+            background: linear-gradient(135deg, rgba(106,17,203,0.05), rgba(255,255,255,0.5));
+            padding:20px; border-radius:12px; border-left:4px solid var(--activity-color); display:flex; align-items:center; gap:15px;
+            transition:all 0.3s ease;
+        }
+        .activity-item:hover { transform: translateX(5px); box-shadow:0 5px 20px rgba(0,0,0,0.1); }
+        .activity-icon { width:50px; height:50px; border-radius:50%; background:var(--activity-color); display:flex; align-items:center; justify-content:center; color:white; font-size:1.2rem; }
+        .activity-content { flex:1; }
+        .activity-title { font-weight:600; color:#2c3e50; margin-bottom:5px; }
+        .activity-desc { color:#7f8c8d; font-size:0.9rem; margin-bottom:5px; }
+        .activity-time { color:#bdc3c7; font-size:0.8rem; }
+        .activity-programs { --activity-color: #6a11cb; }
+        .activity-assignments { --activity-color: #27ae60; }
+        .activity-monitoring { --activity-color: #0072ce; }
+
+        .logout-section { text-align:center; margin-top:40px; padding-top:30px; border-top:2px solid #ecf0f1; }
+        .logout-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b); color:white; padding:15px 35px; border:none; border-radius:30px;
+            font-size:1.1rem; font-weight:600; cursor:pointer; transition:all 0.3s ease; text-decoration:none; display:inline-flex; align-items:center; gap:12px; box-shadow:0 10px 30px rgba(231,76,60,0.3);
+        }
+        .logout-btn:hover { transform: translateY(-3px); box-shadow:0 15px 40px rgba(231,76,60,0.4); text-decoration:none; color:white; }
+
+        @media (max-width:768px) {
+            .coordinator-portal-container { padding:25px 20px; margin:10px; }
+            .university-name { font-size:1.6rem; }
+            .coordinator-details { grid-template-columns:1fr; gap:15px; }
+            .academic-summary { grid-template-columns: repeat(2,1fr); gap:15px; }
+            .coordinator-modules { grid-template-columns:1fr; gap:20px; }
+            .module-card { padding:25px 20px; }
+        }
+        @media (max-width:480px) {
+            .academic-summary { grid-template-columns:1fr; }
+            .summary-number { font-size:2rem; }
+            .module-icon { font-size:2.5rem; }
+            .module-title { font-size:1.2rem; }
+        }
+
+        .fade-in { opacity:0; transform: translateY(30px); transition: all 0.6s ease; }
+        .fade-in.show { opacity:1; transform: translateY(0); }
+        .scale-in { opacity:0; transform: scale(0.9); transition: all 0.5s ease; }
+        .scale-in.show { opacity:1; transform: scale(1); }
+
+        /* ---------- Modal y notificaciones ---------- */
+        .overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center;
+            z-index: 9999; padding: 20px;
+        }
+        .modal {
+            width: 100%; max-width: 1000px; background: white; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+            overflow: hidden; animation: pop 0.18s ease;
+        }
+        @keyframes pop { from { transform: translateY(8px) scale(0.98); opacity: 0 } to { transform: translateY(0) scale(1); opacity:1 } }
+        .modal-header { padding: 18px 22px; border-bottom: 1px solid #f1f1f1; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+        .modal-header h4 { font-size:1.1rem; color:#2c3e50; }
+        .modal-body { padding: 18px 22px; max-height: 70vh; overflow:auto; color:#2c3e50; }
+        .modal-footer { padding: 16px 22px; border-top: 1px solid #f1f1f1; text-align: right; }
+
+        .btn { display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:10px; cursor:pointer; border:none; background:#6a11cb; color:white; font-weight:600; }
+        .btn.ghost { background:transparent; color:#2c3e50; border:1px solid #e6e6e6; }
+        .btn.danger { background: linear-gradient(135deg,#e74c3c,#c0392b); }
+        .btn.primary { background: linear-gradient(135deg,#6a11cb,#2575fc); }
+        .btn.success { background: linear-gradient(135deg,#27ae60,#2ecc71); }
+        .btn.warning { background: linear-gradient(135deg,#f39c12,#e67e22); }
+
+        /* Tabla simple */
+        table { width:100%; border-collapse: collapse; margin-top:10px; }
+        th, td { padding:10px 8px; text-align:left; border-bottom:1px solid #f1f1f1; font-size:0.95rem; color:#34495e; }
+        th { color:#2c3e50; font-weight:700; font-size:0.95rem; }
+
+        /* Progress bar */
+        .progress { background:#ecf0f1; border-radius:999px; height:14px; overflow:hidden; }
+        .progress > div { height:100%; background: linear-gradient(90deg,#6a11cb,#2575fc); width:0; transition: width 0.7s ease; }
+
+        /* Toast */
+        .toast {
+            position: fixed; right: 20px; bottom: 20px; background: rgba(0,0,0,0.8); color:white; padding:12px 18px; border-radius:10px;
+            z-index: 10000; display:flex; gap:10px; align-items:center; box-shadow:0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        /* Formularios */
+        label { display:block; font-weight:600; margin-bottom:6px; color:#2c3e50; }
+        input[type="text"], input[type="email"], input[type="number"], select, textarea {
+            width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e6e6e6; background:#fafafa; font-size:0.95rem;
+        }
+        textarea { min-height:100px; resize:vertical; }
+        .form-row { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:12px; }
+
+        /* Tabs */
+        .tabs { display:flex; gap:2px; margin-bottom:20px; background:#f8f9fa; border-radius:10px; padding:4px; }
+        .tab-btn { flex:1; padding:10px 16px; background:transparent; border:none; border-radius:8px; cursor:pointer; font-weight:600; color:#7f8c8d; transition:all 0.3s ease; }
+        .tab-btn.active { background:white; color:#6a11cb; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+        .tab-content { display:none; }
+        .tab-content.active { display:block; }
+
+        /* Cards específicas del coordinador */
+        .pnf-card {
+            background: linear-gradient(135deg, rgba(106,17,203,0.1), rgba(255,255,255,0.9));
+            padding:20px; border-radius:12px; border-left:4px solid #6a11cb; margin-bottom:15px;
+        }
+        .pnf-title { font-weight:600; color:#2c3e50; margin-bottom:8px; }
+        .pnf-details { display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px; font-size:0.9rem; color:#7f8c8d; }
+        .assignment-item {
+            background:white; padding:15px; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1); margin-bottom:10px;
+            display:flex; justify-content:space-between; align-items:center;
+        }
+        .student-performance { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; }
+        .performance-card { background:white; padding:15px; border-radius:8px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+    <div class="coordinator-portal-container fade-in">
+        <!-- University Header -->
+        <div class="university-header">
+            <div class="university-logo">
+                <i class="fas fa-user-tie"></i>
+            </div>
+            <h1 class="university-name">UPT "José Félix Ribas"</h1>
+            <p class="university-subtitle">Portal Académico del Coordinador</p>
+        </div>
+
+        <div class="patriotic-banner"></div>
+
+        <!-- Coordinator Info Header -->
+        <div class="coordinator-info-header scale-in">
+            <div class="coordinator-badge">
+                <i class="fas fa-user-tie"></i>
+                Portal del Coordinador
+            </div>
+            
+            <div class="coordinator-details">
+                <div class="detail-item">
+                    <i class="fas fa-user"></i>
+                    <span>Coordinador: <span class="detail-value">Prof. Dr. Carlos Eduardo Morales</span></span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-id-card"></i>
+                    <span>Cédula: <span class="detail-value">V-8.765.432</span></span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Área: <span class="detail-value">Coordinación Académica - Informática</span></span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-building"></i>
+                    <span>Sede: <span class="detail-value">Principal - La Victoria</span></span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Período: <span class="detail-value">2024-I</span></span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-users"></i>
+                    <span>PNF: <span class="detail-value">3 Programas Activos</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic Summary -->
+        <div class="academic-summary">
+            <div class="summary-card card-programs scale-in">
+                <div class="summary-number">3</div>
+                <div class="summary-label">PNF Activos</div>
+                <div class="summary-detail">Programas coordinados</div>
+            </div>
+            
+            <div class="summary-card card-teachers scale-in">
+                <div class="summary-number">18</div>
+                <div class="summary-label">Docentes Asignados</div>
+                <div class="summary-detail">En sus programas</div>
+            </div>
+            
+            <div class="summary-card card-students scale-in">
+                <div class="summary-number">347</div>
+                <div class="summary-label">Estudiantes Total</div>
+                <div class="summary-detail">Todos los PNF</div>
+            </div>
+            
+            <div class="summary-card card-subjects scale-in">
+                <div class="summary-number">24</div>
+                <div class="summary-label">Materias Activas</div>
+                <div class="summary-detail">En el período</div>
+            </div>
+            
+            <div class="summary-card card-reports scale-in">
+                <div class="summary-number">12</div>
+                <div class="summary-label">Reportes Pendientes</div>
+                <div class="summary-detail">Por revisar</div>
+            </div>
+            
+            <div class="summary-card card-requests scale-in">
+                <div class="summary-number">5</div>
+                <div class="summary-label">Solicitudes</div>
+                <div class="summary-detail">Nuevas asignaciones</div>
+            </div>
+        </div>
+
+        <!-- Coordinator Modules -->
+        <div class="coordinator-modules">
+            <!-- Gestión de PNF -->
+            <a href="#" class="module-card module-programs fade-in" onclick="event.preventDefault(); showPNFManagement()">
+                <i class="fas fa-graduation-cap module-icon"></i>
+                <h3 class="module-title">Gestión de PNF</h3>
+                <p class="module-description">Administra los Programas Nacionales de Formación bajo tu coordinación, ofertas académicas y estructura curricular.</p>
+                <div class="module-features">
+                    <span class="feature-tag">Ofertas académicas</span>
+                    <span class="feature-tag">Estructura curricular</span>
+                    <span class="feature-tag">Planes de estudio</span>
+                </div>
+                <div class="module-stats">
+                    <span class="stat-item">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>3 PNF activos</span>
+                    </span>
+                    <span class="stat-item"><i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <!-- Gestión de Materias -->
+            <a href="#" class="module-card module-subjects fade-in" onclick="event.preventDefault(); showSubjectsManagement()">
+                <i class="fas fa-book module-icon"></i>
+                <h3 class="module-title">Gestión de Materias</h3>
+                <p class="module-description">Administra las unidades curriculares, horarios, aulas y recursos necesarios para cada materia.</p>
+                <div class="module-features">
+                    <span class="feature-tag">UC por trayecto</span>
+                    <span class="feature-tag">Horarios</span>
+                    <span class="feature-tag">Asignación de aulas</span>
+                </div>
+                <div class="module-stats">
+                    <span class="stat-item"><i class="fas fa-book-open"></i><span>24 materias activas</span></span>
+                    <span class="stat-item"><i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <!-- Asignación de Docentes -->
+            <a href="#" class="module-card module-assignments fade-in" onclick="event.preventDefault(); showTeacherAssignments()">
+                <i class="fas fa-chalkboard-teacher module-icon"></i>
+                <h3 class="module-title">Asignación de Docentes</h3>
+                <p class="module-description">Asigna docentes a materias específicas, gestiona cargas horarias y distribuye responsabilidades académicas.</p>
+                <div class="module-features">
+                    <span class="feature-tag">Carga horaria</span>
+                    <span class="feature-tag">Especialidades</span>
+                    <span class="feature-tag">Disponibilidad</span>
+                </div>
+                <div class="module-stats">
+                    <span class="stat-item"><i class="fas fa-user-tie"></i><span>18 docentes asignados</span></span>
+                    <span class="stat-item"><i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <!-- Monitoreo de Estudiantes -->
+            <a href="#" class="module-card module-monitoring fade-in" onclick="event.preventDefault(); showStudentMonitoring()">
+                <i class="fas fa-chart-line module-icon"></i>
+                <h3 class="module-title">Monitoreo de Estudiantes</h3>
+                <p class="module-description">Supervisa el rendimiento académico, asistencia y progreso de todos los estudiantes en tus programas.</p>
+                <div class="module-features">
+                    <span class="feature-tag">Rendimiento académico</span>
+                    <span class="feature-tag">Asistencia</span>
+                    <span class="feature-tag">Alertas tempranas</span>
+                </div>
+                <div class="module-stats">
+                    <span class="stat-item"><i class="fas fa-users"></i><span>347 estudiantes</span></span>
+                    <span class="stat-item"><i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <!-- Reportes y Estadísticas -->
+            <a href="#" class="module-card module-reports fade-in" onclick="event.preventDefault(); showCoordinatorReports()">
+                <i class="fas fa-chart-bar module-icon"></i>
+                <h3 class="module-title">Reportes y Estadísticas</h3>
+                <p class="module-description">Genera reportes institucionales, estadísticas de programas y análisis de gestión académica.</p>
+                <div class="module-features">
+                    <span class="feature-tag">Reportes institucionales</span>
+                    <span class="feature-tag">Indicadores académicos</span>
+                    <span class="feature-tag">Análisis comparativo</span>
+                </div>
+                <div class="module-stats">
+                    <span class="stat-item"><i class="fas fa-file-chart-line"></i><span>12 reportes pendientes</span></span>
+                    <span class="stat-item"><i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <!-- Información Personal -->
+            <a href="#" class="module-card module-profile fade-in" onclick="event.preventDefault(); showCoordinatorProfile()">
+                <i class="fas fa-user-edit module-icon"></i>
+                <h3 class="module-title">Información Personal</h3>
+                <p class="module-description">Actualiza tu información personal, datos de contacto y configuración del perfil de coordinador.</p>
+                <div class="module-features">
+                    <span class="feature-tag">Datos personales</span>
+                    <span class="feature-tag">Información institucional</span>
+                    <span class="feature-tag">Configuración</span>
+                </div>
+                <div class="module-stats">
+                    <span class="stat-item"><i class="fas fa-user-check"></i><span>Perfil completo</span></span>
+                    <span class="stat-item"><i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <!-- Módulos adicionales como docente (si tiene rol dual) -->
+            <a href="#" class="module-card module-grades fade-in" onclick="event.preventDefault(); showGradesManagement()">
+                <i class="fas fa-clipboard-list module-icon"></i>
+                <h3 class="module-title">Carga de Notas</h3>
+                <p class="module-description">Registra calificaciones en las materias donde ejerces como docente además de coordinador.</p>
+                <div class="module-features">
+                    <span class="feature-tag">Evaluaciones</span>
+                    <span class="feature-tag">Notas finales</span>
+                    <span class="feature-tag">Actas</span>
+                </div>
+                <div class="module-stats">
+                    <span class="stat-item"><i class="fas fa-exclamation-circle"></i><span>Como docente</span></span>
+                    <span class="stat-item"><i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <!-- Matrícula de Estudiantes -->
+            <a href="#" class="module-card module-enrollment fade-in" onclick="event.preventDefault(); showEnrollmentManagement()">
+                <i class="fas fa-users module-icon"></i>
+                <h3 class="module-title">Matrícula y Inscripciones</h3>
+                <p class="module-description">Supervisa el proceso de matrícula, inscripciones por período y gestiona cambios de sección.</p>
+                <div class="module-features">
+                    <span class="feature-tag">Proceso de matrícula</span>
+                    <span class="feature-tag">Inscripciones</span>
+                    <span class="feature-tag">Cambios de sección</span>
+                </div>
+                <div class="module-stats">
+                    <span class="stat-item"><i class="fas fa-user-plus"></i><span>347 estudiantes</span></span>
+                    <span class="stat-item"><i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <!-- Información Académica -->
+            <a href="#" class="module-card module-academic fade-in" onclick="event.preventDefault(); showAcademicInfo()">
+                <i class="fas fa-calendar-week module-icon"></i>
+                <h3 class="module-title">Información Académica</h3>
+                <p class="module-description">Consulta fechas importantes, cronograma de evaluaciones y calendario institucional.</p>
+                <div class="module-features">
+                    <span class="feature-tag">Fechas importantes</span>
+                    <span class="feature-tag">Cronograma</span>
+                    <span class="feature-tag">Eventos institucionales</span>
+                </div>
+                <div class="module-stats">
+                    <span class="stat-item"><i class="fas fa-calendar"></i><span>Período 2024-I</span></span>
+                    <span class="stat-item"><i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <!-- Gestión de Horarios -->
+            <a href="#" class="module-card module-schedule fade-in" onclick="event.preventDefault(); showScheduleManagement()">
+                <i class="fas fa-clock module-icon"></i>
+                <h3 class="module-title">Gestión de Horarios</h3>
+                <p class="module-description">Coordina horarios de clases, asignación de aulas y resolución de conflictos de horarios.</p>
+                <div class="module-features">
+                    <span class="feature-tag">Horarios de clases</span>
+                    <span class="feature-tag">Asignación de aulas</span>
+                    <span class="feature-tag">Conflictos</span>
+                </div>
+                <div class="module-stats">
+                    <span class="stat-item"><i class="fas fa-clock"></i><span>24 horarios activos</span></span>
+                    <span class="stat-item"><i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="recent-activity fade-in">
+            <h3><i class="fas fa-clock"></i> Actividad Reciente</h3>
+            <div class="activity-list">
+                <div class="activity-item activity-programs">
+                    <div class="activity-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <div class="activity-content">
+                        <div class="activity-title">Nueva oferta académica aprobada</div>
+                        <div class="activity-desc">PNF en Informática - Modalidad Nocturna para cohorte 2024-II</div>
+                        <div class="activity-time">Hace 2 horas</div>
+                    </div>
+                </div>
+
+                <div class="activity-item activity-assignments">
+                    <div class="activity-icon"><i class="fas fa-user-plus"></i></div>
+                    <div class="activity-content">
+                        <div class="activity-title">Docente asignado</div>
+                        <div class="activity-desc">Prof. Ana Rodríguez asignada a Bases de Datos II - Sección A</div>
+                        <div class="activity-time">Hace 4 horas</div>
+                    </div>
+                </div>
+
+                <div class="activity-item activity-monitoring">
+                    <div class="activity-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="activity-content">
+                        <div class="activity-title">Reporte de rendimiento generado</div>
+                        <div class="activity-desc">Estadísticas del Trayecto II - Índice de aprobación: 87.3%</div>
+                        <div class="activity-time">Hace 1 día</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logout Section -->
+        <div class="logout-section">
+            <a href="#" class="logout-btn" onclick="event.preventDefault(); confirmLogout()">
+                <i class="fas fa-sign-out-alt"></i>
+                Cerrar Sesión
+            </a>
+        </div>
+    </div>
+
+    <!-- Contenedor para modal dinámico -->
+    <div id="app-modal-root" style="display:none;"></div>
+
+    <!-- Contenedor para toasts -->
+    <div id="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+    <script>
+        // Animaciones iniciales
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.querySelectorAll('.fade-in, .scale-in').forEach((el, index) => {
+                    setTimeout(() => el.classList.add('show'), index * 80);
+                });
+            }, 120);
+        });
+
+        /* ---------- UTILIDADES DE INTERFAZ ---------- */
+
+        // Muestra una notificación (toast) en pantalla
+        function showNotification(message, type = 'info', duration = 3200) {
+            const root = document.getElementById('toast-root');
+            if (!root) return;
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<strong style="min-width:18px;">${type === 'info' ? 'ℹ️' : type === 'success' ? '✅' : '⚠️'}</strong><div>${message}</div>`;
+            root.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(8px)'; }, duration);
+            setTimeout(() => root.removeChild(toast), duration + 360);
+        }
+
+        // Crea y abre un modal con contenido HTML
+        function showModal({ title = '', html = '', onClose = null, primaryBtn = null }) {
+            const root = document.getElementById('app-modal-root');
+            root.innerHTML = ''; root.style.display = 'block';
+
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            overlay.innerHTML = `
+                <div class="modal" role="dialog" aria-modal="true">
+                    <div class="modal-header">
+                        <h4>${title}</h4>
+                        <div>
+                            <button class="btn ghost" id="modal-close-btn" title="Cerrar"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="modal-body">${html}</div>
+                    <div class="modal-footer" id="modal-footer"></div>
+                </div>
+            `;
+            root.appendChild(overlay);
+
+            // Close handlers
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closeModal(onClose);
+            });
+            overlay.querySelector('#modal-close-btn').addEventListener('click', () => closeModal(onClose));
+
+            // primary button if existe
+            const footer = overlay.querySelector('#modal-footer');
+            if (primaryBtn) {
+                const btn = document.createElement('button');
+                btn.className = 'btn primary';
+                btn.textContent = primaryBtn.label;
+                btn.addEventListener('click', () => {
+                    if (typeof primaryBtn.action === 'function') primaryBtn.action({ close: () => closeModal(onClose) });
+                });
+                footer.appendChild(btn);
+
+                if (primaryBtn.secondary) {
+                    const sec = document.createElement('button');
+                    sec.className = 'btn ghost';
+                    sec.textContent = primaryBtn.secondary.label;
+                    sec.addEventListener('click', () => {
+                        if (typeof primaryBtn.secondary.action === 'function') primaryBtn.secondary.action({ close: () => closeModal(onClose) });
+                    });
+                    footer.appendChild(sec);
+                }
+            } else {
+                // mostrar botón cerrar por defecto
+                const btn = document.createElement('button');
+                btn.className = 'btn ghost';
+                btn.textContent = 'Cerrar';
+                btn.addEventListener('click', () => closeModal(onClose));
+                footer.appendChild(btn);
+            }
+        }
+
+        function closeModal(onClose) {
+            const root = document.getElementById('app-modal-root');
+            if (!root) return;
+            root.innerHTML = '';
+            root.style.display = 'none';
+            if (typeof onClose === 'function') onClose();
+        }
+
+        /* ---------- FUNCIONALIDADES DEL COORDINADOR ---------- */
+
+        // 1) Gestión de PNF (Programas Nacionales de Formación)
+        function showPNFManagement() {
+            const pnfData = [
+                { 
+                    id: 'pnf1', 
+                    codigo: 'PNF-INF', 
+                    nombre: 'Informática', 
+                    modalidad: 'Presencial/Nocturno',
+                    trayectos: 4,
+                    duracion: '3 años',
+                    estudiantes: 156,
+                    estado: 'Activo',
+                    coordinador: 'Prof. Carlos Morales'
+                },
+                { 
+                    id: 'pnf2', 
+                    codigo: 'PNF-ELE', 
+                    nombre: 'Electrónica', 
+                    modalidad: 'Presencial',
+                    trayectos: 4,
+                    duracion: '3 años',
+                    estudiantes: 98,
+                    estado: 'Activo',
+                    coordinador: 'Prof. María González'
+                },
+                { 
+                    id: 'pnf3', 
+                    codigo: 'PNF-SIS', 
+                    nombre: 'Sistemas', 
+                    modalidad: 'Mixto',
+                    trayectos: 4,
+                    duracion: '3 años',
+                    estudiantes: 93,
+                    estado: 'En Aprobación',
+                    coordinador: 'Prof. José Ramírez'
+                }
+            ];
+
+            const pnfCards = pnfData.map(pnf => `
+                <div class="pnf-card">
+                    <div class="pnf-title">${pnf.codigo} - ${pnf.nombre}</div>
+                    <div class="pnf-details">
+                        <div><strong>Modalidad:</strong> ${pnf.modalidad}</div>
+                        <div><strong>Trayectos:</strong> ${pnf.trayectos}</div>
+                        <div><strong>Duración:</strong> ${pnf.duracion}</div>
+                        <div><strong>Estudiantes:</strong> ${pnf.estudiantes}</div>
+                        <div><strong>Estado:</strong> <span style="color: ${pnf.estado === 'Activo' ? '#27ae60' : '#f39c12'}">${pnf.estado}</span></div>
+                        <div><strong>Coordinador:</strong> ${pnf.coordinador}</div>
+                    </div>
+                    <div style="margin-top:10px; display:flex; gap:8px;">
+                        <button class="btn primary" onclick="editPNF('${pnf.id}')" style="font-size:0.8rem; padding:4px 8px;">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <button class="btn" onclick="viewPNFDetails('${pnf.id}')" style="background:#0072ce; font-size:0.8rem; padding:4px 8px;">
+                            <i class="fas fa-eye"></i> Ver Detalles
+                        </button>
+                        <button class="btn warning" onclick="manageCurriculum('${pnf.id}')" style="font-size:0.8rem; padding:4px 8px;">
+                            <i class="fas fa-list-alt"></i> Currículo
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            const html = `
+                <div>
+                    <h3>🎓 Gestión de Programas Nacionales de Formación (PNF)</h3>
+                    <p style="color:#7f8c8d; margin-bottom:16px;">Administra los programas académicos bajo tu coordinación.</p>
+                    
+                    <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
+                        <button class="btn success" onclick="createNewPNF()">
+                            <i class="fas fa-plus"></i> Nuevo PNF
+                        </button>
+                        <button class="btn" onclick="generatePNFReport()" style="background:#f39c12;">
+                            <i class="fas fa-file-excel"></i> Reporte General
+                        </button>
+                        <button class="btn" onclick="manageOffers()" style="background:#9b59b6;">
+                            <i class="fas fa-calendar-alt"></i> Ofertas Académicas
+                        </button>
+                    </div>
+                    
+                    ${pnfCards}
+                    
+                    <div style="margin-top:20px; padding:15px; background:#f8f9fa; border-radius:8px;">
+                        <h4>📊 Resumen General</h4>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap:10px; margin-top:10px;">
+                            <div style="text-align:center; padding:8px; background:white; border-radius:6px;">
+                                <strong style="color:#6a11cb;">${pnfData.length}</strong><br>
+                                <small>PNF Total</small>
+                            </div>
+                            <div style="text-align:center; padding:8px; background:white; border-radius:6px;">
+                                <strong style="color:#27ae60;">${pnfData.filter(p => p.estado === 'Activo').length}</strong><br>
+                                <small>PNF Activos</small>
+                            </div>
+                            <div style="text-align:center; padding:8px; background:white; border-radius:6px;">
+                                <strong style="color:#0072ce;">${pnfData.reduce((sum, p) => sum + p.estudiantes, 0)}</strong><br>
+                                <small>Estudiantes</small>
+                            </div>
+                            <div style="text-align:center; padding:8px; background:white; border-radius:6px;">
+                                <strong style="color:#f39c12;">3</strong><br>
+                                <small>Modalidades</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            showModal({ title: 'Gestión de PNF', html });
+        }
+
+        // 2) Gestión de Materias/Unidades Curriculares
+        function showSubjectsManagement() {
+            const subjects = [
+                { codigo: 'MAT101', nombre: 'Matemática I', trayecto: 'I', creditos: 4, horasSemanales: 6, docente: 'Prof. Ana López', secciones: 2, estudiantes: 45 },
+                { codigo: 'INF201', nombre: 'Programación I', trayecto: 'II', creditos: 5, horasSemanales: 8, docente: 'Prof. Carlos Pérez', secciones: 1, estudiantes: 28 },
+                { codigo: 'BDD301', nombre: 'Bases de Datos', trayecto: 'III', creditos: 4, horasSemanales: 6, docente: 'Prof. María González', secciones: 2, estudiantes: 52 },
+                { codigo: 'SIS401', nombre: 'Sistemas Distribuidos', trayecto: 'IV', creditos: 5, horasSemanales: 8, docente: 'Sin asignar', secciones: 1, estudiantes: 0 }
+            ];
+
+            const tabs = `
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="showTab('subjects-list')">Lista de Materias</button>
+                    <button class="tab-btn" onclick="showTab('curriculum-structure')">Estructura Curricular</button>
+                    <button class="tab-btn" onclick="showTab('schedule-matrix')">Matriz de Horarios</button>
+                </div>
+            `;
+
+            const subjectsList = `
+                <div id="subjects-list" class="tab-content active">
+                    <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
+                        <button class="btn success" onclick="addNewSubject()">
+                            <i class="fas fa-plus"></i> Nueva Materia
+                        </button>
+                        <button class="btn" onclick="importCurriculum()" style="background:#0072ce;">
+                            <i class="fas fa-upload"></i> Importar Currículo
+                        </button>
+                        <button class="btn warning" onclick="validateCurriculum()">
+                            <i class="fas fa-check-circle"></i> Validar Estructura
+                        </button>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr><th>Código</th><th>Materia</th><th>Trayecto</th><th>Créditos</th><th>Horas/Sem</th><th>Docente</th><th>Secciones</th><th>Estudiantes</th><th>Acciones</th></tr>
+                        </thead>
+                        <tbody>
+                            ${subjects.map(s => `
+                                <tr>
+                                    <td><strong>${s.codigo}</strong></td>
+                                    <td>${s.nombre}</td>
+                                    <td>${s.trayecto}</td>
+                                    <td>${s.creditos}</td>
+                                    <td>${s.horasSemanales}</td>
+                                    <td style="color: ${s.docente === 'Sin asignar' ? '#e74c3c' : '#27ae60'}">${s.docente}</td>
+                                    <td>${s.secciones}</td>
+                                    <td>${s.estudiantes}</td>
+                                    <td>
+                                        <button class="btn ghost" onclick="editSubject('${s.codigo}')" style="font-size:0.8rem; padding:3px 6px;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn ghost" onclick="manageSchedule('${s.codigo}')" style="font-size:0.8rem; padding:3px 6px;">
+                                            <i class="fas fa-clock"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            const curriculumStructure = `
+                <div id="curriculum-structure" class="tab-content">
+                    <h4>Estructura Curricular por Trayectos</h4>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:15px; margin-top:15px;">
+                        ${[1,2,3,4].map(trayecto => `
+                            <div style="background:white; padding:15px; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+                                <h5 style="color:#6a11cb; margin-bottom:10px;">Trayecto ${trayecto}</h5>
+                                ${subjects.filter(s => s.trayecto === trayecto.toString()).map(s => `
+                                    <div style="padding:5px; background:#f8f9fa; margin:5px 0; border-radius:4px; font-size:0.9rem;">
+                                        <strong>${s.codigo}</strong><br>
+                                        ${s.nombre}<br>
+                                        <small style="color:#7f8c8d;">${s.creditos} créditos</small>
+                                    </div>
+                                `).join('') || '<small style="color:#95a5a6;">No hay materias asignadas</small>'}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            const scheduleMatrix = `
+                <div id="schedule-matrix" class="tab-content">
+                    <h4>Matriz de Horarios por Aulas</h4>
+                    <p style="color:#7f8c8d; margin-bottom:15px;">Visualización de la ocupación de aulas por día y hora.</p>
+                    <div style="overflow-x:auto;">
+                        <table style="min-width:600px;">
+                            <thead>
+                                <tr><th>Hora</th><th>Lunes</th><th>Martes</th><th>Miércoles</th><th>Jueves</th><th>Viernes</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>7:00-9:00</strong></td>
+                                    <td style="background:rgba(106,17,203,0.1);">MAT101-A<br><small>Aula A-101</small></td>
+                                    <td></td>
+                                    <td style="background:rgba(106,17,203,0.1);">MAT101-A<br><small>Aula A-101</small></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>9:00-11:00</strong></td>
+                                    <td></td>
+                                    <td style="background:rgba(243,156,18,0.1);">INF201-B<br><small>Lab-1</small></td>
+                                    <td></td>
+                                    <td style="background:rgba(243,156,18,0.1);">INF201-B<br><small>Lab-1</small></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>14:00-16:00</strong></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td style="background:rgba(39,174,96,0.1);">BDD301-A<br><small>Aula B-201</small></td>
+                                    <td></td>
+                                    <td style="background:rgba(39,174,96,0.1);">BDD301-A<br><small>Aula B-201</small></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            const html = `
+                <div>
+                    <h3>📚 Gestión de Materias y Unidades Curriculares</h3>
+                    <p style="color:#7f8c8d; margin-bottom:16px;">Administra las materias, horarios y estructura curricular de los programas.</p>
+                    
+                    ${tabs}
+                    ${subjectsList}
+                    ${curriculumStructure}
+                    ${scheduleMatrix}
+                </div>
+            `;
+
+            showModal({ title: 'Gestión de Materias', html });
+        }
+
+        // 3) Asignación de Docentes
+        function showTeacherAssignments() {
+            const teachers = [
+                { id: 1, nombre: 'Prof. Ana María López', cedula: 'V-12.345.678', especialidad: 'Matemática', dedicacion: 'TC', materias: 2, horas: 18, disponibilidad: 'Mañana/Tarde' },
+                { id: 2, nombre: 'Prof. Carlos Eduardo Pérez', cedula: 'V-11.234.567', especialidad: 'Programación', dedicacion: 'TC', materias: 3, horas: 24, disponibilidad: 'Mañana/Noche' },
+                { id: 3, nombre: 'Prof. María Fernanda González', cedula: 'V-10.987.654', especialidad: 'Bases de Datos', dedicacion: 'MT', materias: 2, horas: 12, disponibilidad: 'Tarde' },
+                { id: 4, nombre: 'Prof. José Luis Ramírez', cedula: 'V-13.456.789', especialidad: 'Sistemas', dedicacion: 'CV', materias: 1, horas: 6, disponibilidad: 'Noche' }
+            ];
+
+            const availableSubjects = [
+                { codigo: 'SIS401', nombre: 'Sistemas Distribuidos', trayecto: 'IV', requiere: 'Sistemas/Redes' },
+                { codigo: 'MAT201', nombre: 'Matemática II', trayecto: 'II', requiere: 'Matemática' },
+                { codigo: 'INF301', nombre: 'Algoritmos Avanzados', trayecto: 'III', requiere: 'Programación' }
+            ];
+
+            const html = `
+                <div>
+                    <h3>👥 Asignación de Docentes a Materias</h3>
+                    <p style="color:#7f8c8d; margin-bottom:16px;">Gestiona la asignación de docentes, carga horaria y especialidades.</p>
+                    
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="showTab('current-assignments')">Asignaciones Actuales</button>
+                        <button class="tab-btn" onclick="showTab('available-subjects')">Materias Disponibles</button>
+                        <button class="tab-btn" onclick="showTab('workload-analysis')">Análisis de Carga</button>
+                    </div>
+                    
+                    <div id="current-assignments" class="tab-content active">
+                        <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
+                            <button class="btn success" onclick="createNewAssignment()">
+                                <i class="fas fa-user-plus"></i> Nueva Asignación
+                            </button>
+                            <button class="btn warning" onclick="redistributeWorkload()">
+                                <i class="fas fa-balance-scale"></i> Redistribuir Carga
+                            </button>
+                            <button class="btn" onclick="exportAssignments()" style="background:#f39c12;">
+                                <i class="fas fa-file-excel"></i> Exportar Asignaciones
+                            </button>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr><th>Docente</th><th>Cédula</th><th>Especialidad</th><th>Dedicación</th><th>Materias</th><th>Horas</th><th>Disponibilidad</th><th>Acciones</th></tr>
+                            </thead>
+                            <tbody>
+                                ${teachers.map(t => `
+                                    <tr>
+                                        <td><strong>${t.nombre}</strong></td>
+                                        <td>${t.cedula}</td>
+                                        <td>${t.especialidad}</td>
+                                        <td><span style="color: ${t.dedicacion === 'TC' ? '#27ae60' : t.dedicacion === 'MT' ? '#f39c12' : '#0072ce'}">${t.dedicacion}</span></td>
+                                        <td>${t.materias}</td>
+                                        <td>${t.horas}h</td>
+                                        <td><small>${t.disponibilidad}</small></td>
+                                        <td>
+                                            <button class="btn ghost" onclick="editAssignment(${t.id})" style="font-size:0.8rem; padding:3px 6px;">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn ghost" onclick="viewTeacherDetails(${t.id})" style="font-size:0.8rem; padding:3px 6px;">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="available-subjects" class="tab-content">
+                        <h4>Materias Sin Docente Asignado</h4>
+                        <div style="margin-top:15px;">
+                            ${availableSubjects.map(sub => `
+                                <div class="assignment-item">
+                                    <div>
+                                        <strong>${sub.codigo} - ${sub.nombre}</strong><br>
+                                        <small style="color:#7f8c8d;">Trayecto ${sub.trayecto} | Requiere: ${sub.requiere}</small>
+                                    </div>
+                                    <div>
+                                        <button class="btn success" onclick="assignTeacher('${sub.codigo}')" style="font-size:0.8rem;">
+                                            <i class="fas fa-user-plus"></i> Asignar Docente
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${availableSubjects.length === 0 ? '<p style="text-align:center; color:#95a5a6;">Todas las materias tienen docente asignado</p>' : ''}
+                    </div>
+                    
+                    <div id="workload-analysis" class="tab-content">
+                        <h4>Análisis de Carga Horaria</h4>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-top:15px;">
+                            ${teachers.map(t => {
+                                const maxHours = t.dedicacion === 'TC' ? 36 : t.dedicacion === 'MT' ? 18 : 12;
+                                const percentage = (t.horas / maxHours) * 100;
+                                const color = percentage > 90 ? '#e74c3c' : percentage > 70 ? '#f39c12' : '#27ae60';
+                                return `
+                                    <div style="background:white; padding:15px; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+                                        <h6 style="margin-bottom:10px; color:#2c3e50;">${t.nombre.split(' ').slice(0,2).join(' ')}</h6>
+                                        <div style="margin-bottom:8px;">
+                                            <small style="color:#7f8c8d;">Carga: ${t.horas}h / ${maxHours}h</small>
+                                        </div>
+                                        <div class="progress">
+                                            <div style="width:${percentage}%; background:${color};"></div>
+                                        </div>
+                                        <div style="margin-top:8px; font-size:0.8rem; color:${color};">
+                                            ${percentage.toFixed(1)}% ocupación
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            showModal({ title: 'Asignación de Docentes', html });
+        }
+
+        // 4) Monitoreo de Estudiantes
+        function showStudentMonitoring() {
+            const studentStats = {
+                total: 347,
+                activos: 325,
+                riesgo: 28,
+                excelente: 89,
+                retirados: 22,
+                nuevos: 45
+            };
+
+            const riskStudents = [
+                { nombre: 'Juan Carlos Pérez', cedula: 'V-28.123.456', pnf: 'Informática', trayecto: 'II', promedio: 11.2, asistencia: 65, materias: 5 },
+                { nombre: 'Ana Sofía Rodríguez', cedula: 'V-27.234.567', pnf: 'Electrónica', trayecto: 'I', promedio: 9.8, asistencia: 58, materias: 4 },
+                { nombre: 'Carlos David López', cedula: 'V-29.345.678', pnf: 'Sistemas', trayecto: 'III', promedio: 10.5, asistencia: 72, materias: 6 }
+            ];
+
+            const excellentStudents = [
+                { nombre: 'María Elena Martínez', cedula: 'V-26.789.012', pnf: 'Informática', trayecto: 'III', promedio: 18.7, asistencia: 98, materias: 6 },
+                { nombre: 'José Antonio González', cedula: 'V-25.678.901', pnf: 'Electrónica', trayecto: 'II', promedio: 19.1, asistencia: 96, materias: 5 },
+                { nombre: 'Lucia Fernanda Castro', cedula: 'V-27.890.123', pnf: 'Sistemas', trayecto: 'IV', promedio: 18.4, asistencia: 99, materias: 5 }
+            ];
+
+            const html = `
+                <div>
+                    <h3>📊 Monitoreo Integral de Estudiantes</h3>
+                    <p style="color:#7f8c8d; margin-bottom:16px;">Supervisa el rendimiento académico y identifica estudiantes en riesgo o con excelencia académica.</p>
+                    
+                    <div class="student-performance">
+                        <div class="performance-card">
+                            <div style="font-size:2rem; font-weight:bold; color:#0072ce; margin-bottom:8px;">${studentStats.total}</div>
+                            <div style="color:#7f8c8d; font-size:0.9rem;">Total Estudiantes</div>
+                        </div>
+                        <div class="performance-card">
+                            <div style="font-size:2rem; font-weight:bold; color:#27ae60; margin-bottom:8px;">${studentStats.activos}</div>
+                            <div style="color:#7f8c8d; font-size:0.9rem;">Estudiantes Activos</div>
+                        </div>
+                        <div class="performance-card">
+                            <div style="font-size:2rem; font-weight:bold; color:#e74c3c; margin-bottom:8px;">${studentStats.riesgo}</div>
+                            <div style="color:#7f8c8d; font-size:0.9rem;">En Riesgo Académico</div>
+                        </div>
+                        <div class="performance-card">
+                            <div style="font-size:2rem; font-weight:bold; color:#f39c12; margin-bottom:8px;">${studentStats.excelente}</div>
+                            <div style="color:#7f8c8d; font-size:0.9rem;">Excelencia Académica</div>
+                        </div>
+                        <div class="performance-card">
+                            <div style="font-size:2rem; font-weight:bold; color:#95a5a6; margin-bottom:8px;">${studentStats.retirados}</div>
+                            <div style="color:#7f8c8d; font-size:0.9rem;">Retirados/Pausados</div>
+                        </div>
+                        <div class="performance-card">
+                            <div style="font-size:2rem; font-weight:bold; color:#6a11cb; margin-bottom:8px;">${studentStats.nuevos}</div>
+                            <div style="color:#7f8c8d; font-size:0.9rem;">Nuevos Ingresos</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tabs" style="margin-top:20px;">
+                        <button class="tab-btn active" onclick="showTab('risk-students')">Estudiantes en Riesgo</button>
+                        <button class="tab-btn" onclick="showTab('excellent-students')">Excelencia Académica</button>
+                        <button class="tab-btn" onclick="showTab('attendance-report')">Reporte de Asistencia</button>
+                        <button class="tab-btn" onclick="showTab('academic-alerts')">Alertas Tempranas</button>
+                    </div>
+                    
+                    <div id="risk-students" class="tab-content active">
+                        <div style="display:flex; gap:10px; margin:15px 0; flex-wrap:wrap;">
+                            <button class="btn danger" onclick="generateRiskReport()">
+                                <i class="fas fa-exclamation-triangle"></i> Generar Reporte de Riesgo
+                            </button>
+                            <button class="btn warning" onclick="sendAlerts()">
+                                <i class="fas fa-bell"></i> Enviar Alertas
+                            </button>
+                            <button class="btn" onclick="scheduleInterventions()" style="background:#9b59b6;">
+                                <i class="fas fa-calendar-plus"></i> Programar Intervenciones
+                            </button>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr><th>Estudiante</th><th>Cédula</th><th>PNF</th><th>Trayecto</th><th>Promedio</th><th>Asistencia</th><th>Materias</th><th>Acciones</th></tr>
+                            </thead>
+                            <tbody>
+                                ${riskStudents.map(s => `
+                                    <tr>
+                                        <td><strong>${s.nombre}</strong></td>
+                                        <td>${s.cedula}</td>
+                                        <td>${s.pnf}</td>
+                                        <td>${s.trayecto}</td>
+                                        <td style="color:#e74c3c; font-weight:600;">${s.promedio}</td>
+                                        <td style="color:${s.asistencia < 70 ? '#e74c3c' : '#f39c12'}">${s.asistencia}%</td>
+                                        <td>${s.materias}</td>
+                                        <td>
+                                            <button class="btn ghost" onclick="viewStudentProfile('${s.cedula}')" style="font-size:0.8rem; padding:3px 6px;">
+                                                <i class="fas fa-user"></i>
+                                            </button>
+                                            <button class="btn warning" onclick="createIntervention('${s.cedula}')" style="font-size:0.8rem; padding:3px 6px;">
+                                                <i class="fas fa-hands-helping"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="excellent-students" class="tab-content">
+                        <div style="display:flex; gap:10px; margin:15px 0; flex-wrap:wrap;">
+                            <button class="btn success" onclick="generateExcellenceReport()">
+                                <i class="fas fa-trophy"></i> Reporte de Excelencia
+                            </button>
+                            <button class="btn" onclick="recognitionProgram()" style="background:#f39c12;">
+                                <i class="fas fa-award"></i> Programa de Reconocimiento
+                            </button>
+                            <button class="btn" onclick="mentorshipProgram()" style="background:#6a11cb;">
+                                <i class="fas fa-user-graduate"></i> Programa de Tutoría
+                            </button>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr><th>Estudiante</th><th>Cédula</th><th>PNF</th><th>Trayecto</th><th>Promedio</th><th>Asistencia</th><th>Materias</th><th>Acciones</th></tr>
+                            </thead>
+                            <tbody>
+                                ${excellentStudents.map(s => `
+                                    <tr>
+                                        <td><strong>${s.nombre}</strong></td>
+                                        <td>${s.cedula}</td>
+                                        <td>${s.pnf}</td>
+                                        <td>${s.trayecto}</td>
+                                        <td style="color:#27ae60; font-weight:600;">${s.promedio}</td>
+                                        <td style="color:#27ae60">${s.asistencia}%</td>
+                                        <td>${s.materias}</td>
+                                        <td>
+                                            <button class="btn ghost" onclick="viewStudentProfile('${s.cedula}')" style="font-size:0.8rem; padding:3px 6px;">
+                                                <i class="fas fa-user"></i>
+                                            </button>
+                                            <button class="btn success" onclick="nominateRecognition('${s.cedula}')" style="font-size:0.8rem; padding:3px 6px;">
+                                                <i class="fas fa-medal"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="attendance-report" class="tab-content">
+                        <h4>Análisis de Asistencia por PNF y Trayecto</h4>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:15px; margin-top:15px;">
+                            <div style="background:white; padding:15px; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+                                <h6 style="color:#6a11cb; margin-bottom:10px;">PNF Informática</h6>
+                                <div style="margin-bottom:8px;">Promedio: <strong style="color:#27ae60;">87.3%</strong></div>
+                                <div class="progress"><div style="width:87.3%; background:#27ae60;"></div></div>
+                                <small style="color:#7f8c8d; margin-top:8px; display:block;">156 estudiantes</small>
+                            </div>
+                            <div style="background:white; padding:15px; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+                                <h6 style="color:#f39c12; margin-bottom:10px;">PNF Electrónica</h6>
+                                <div style="margin-bottom:8px;">Promedio: <strong style="color:#f39c12;">82.1%</strong></div>
+                                <div class="progress"><div style="width:82.1%; background:#f39c12;"></div></div>
+                                <small style="color:#7f8c8d; margin-top:8px; display:block;">98 estudiantes</small>
+                            </div>
+                            <div style="background:white; padding:15px; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+                                <h6 style="color:#e74c3c; margin-bottom:10px;">PNF Sistemas</h6>
+                                <div style="margin-bottom:8px;">Promedio: <strong style="color:#e74c3c;">79.5%</strong></div>
+                                <div class="progress"><div style="width:79.5%; background:#e74c3c;"></div></div>
+                                <small style="color:#7f8c8d; margin-top:8px; display:block;">93 estudiantes</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="academic-alerts" class="tab-content">
+                        <h4>Sistema de Alertas Tempranas</h4>
+                        <div style="margin-top:15px;">
+                            <div class="assignment-item" style="border-left:4px solid #e74c3c;">
+                                <div>
+                                    <strong style="color:#e74c3c;">Alerta Crítica - Riesgo de Deserción</strong><br>
+                                    <small>12 estudiantes con promedio < 10 y asistencia < 60%</small>
+                                </div>
+                                <button class="btn danger" onclick="handleCriticalAlert()" style="font-size:0.8rem;">
+                                    <i class="fas fa-exclamation-triangle"></i> Atender
+                                </button>
+                            </div>
+                            <div class="assignment-item" style="border-left:4px solid #f39c12;">
+                                <div>
+                                    <strong style="color:#f39c12;">Alerta Moderada - Seguimiento Requerido</strong><br>
+                                    <small>25 estudiantes con tendencia descendente en notas</small>
+                                </div>
+                                <button class="btn warning" onclick="handleModerateAlert()" style="font-size:0.8rem;">
+                                    <i class="fas fa-eye"></i> Revisar
+                                </button>
+                            </div>
+                            <div class="assignment-item" style="border-left:4px solid #0072ce;">
+                                <div>
+                                    <strong style="color:#0072ce;">Información - Nuevos Ingresos</strong><br>
+                                    <small>45 estudiantes nuevos requieren seguimiento inicial</small>
+                                </div>
+                                <button class="btn" onclick="handleNewStudents()" style="background:#0072ce; font-size:0.8rem;">
+                                    <i class="fas fa-user-plus"></i> Programar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            showModal({ title: 'Monitoreo de Estudiantes', html });
+        }
+
+        // 5) Reportes y Estadísticas del Coordinador
+        function showCoordinatorReports() {
+            const html = `
+                <div>
+                    <h3>📈 Reportes y Estadísticas Institucionales</h3>
+                    <p style="color:#7f8c8d; margin-bottom:16px;">Genera reportes institucionales y análisis de gestión académica.</p>
+                    
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; margin:20px 0;">
+                        <!-- Reportes Académicos -->
+                        <div style="padding:20px; border:1px solid #e6e6e6; border-radius:12px; background:linear-gradient(135deg, rgba(106,17,203,0.05), rgba(255,255,255,0.9));">
+                            <h4><i class="fas fa-graduation-cap" style="color:#6a11cb; margin-right:8px;"></i>Reportes Académicos</h4>
+                            <p style="font-size:0.9rem; color:#7f8c8d; margin:12px 0;">Análisis de rendimiento por PNF y trayectos.</p>
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                <button class="btn primary" onclick="generateAcademicPerformance()" style="width:100%; justify-content:center;">
+                                    <i class="fas fa-chart-line"></i> Rendimiento por PNF
+                                </button>
+                                <button class="btn primary" onclick="generateApprovalRates()" style="width:100%; justify-content:center;">
+                                    <i class="fas fa-percentage"></i> Índices de Aprobación
+                                </button>
+                                <button class="btn primary" onclick="generateDropoutAnalysis()" style="width:100%; justify-content:center;">
+                                    <i class="fas fa-user-times"></i> Análisis de Deserción
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Reportes Docentes -->
+                        <div style="padding:20px; border:1px solid #e6e6e6; border-radius:12px; background:linear-gradient(135deg, rgba(39,174,96,0.05), rgba(255,255,255,0.9));">
+                            <h4><i class="fas fa-chalkboard-teacher" style="color:#27ae60; margin-right:8px;"></i>Gestión Docente</h4>
+                            <p style="font-size:0.9rem; color:#7f8c8d; margin:12px 0;">Reportes de asignaciones y carga horaria.</p>
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                <button class="btn success" onclick="generateTeacherWorkload()" style="width:100%; justify-content:center;">
+                                    <i class="fas fa-clock"></i> Carga Horaria
+                                </button>
+                                <button class="btn success" onclick="generateAssignmentReport()" style="width:100%; justify-content:center;">
+                                    <i class="fas fa-users"></i> Asignaciones
+                                </button>
+                                <button class="btn success" onclick="generateTeacherEvaluation()" style="width:100%; justify-content:center;">
+                                    <i class="fas fa-star"></i> Evaluación Docente
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Reportes Estudiantiles -->
+                        <div style="padding:20px; border:1px solid #e6e6e6; border-radius:12px; background:linear-gradient(135deg, rgba(52,152,219,0.05), rgba(255,255,255,0.9));">
+                            <h4><i class="fas fa-user-graduate" style="color:#0072ce; margin-right:8px;"></i>Seguimiento Estudiantil</h4>
+                            <p style="font-size:0.9rem; color:#7f8c8d; margin:12px 0;">Monitoreo y análisis estudiantil.</p>
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                <button class="btn" onclick="generateEnrollmentReport()" style="background:#0072ce; width:100%; justify-content:center;">
+                                    <i class="fas fa-chart-pie"></i> Matrícula
+                                </button>
+                                <button class="btn" onclick="generateAttendanceAnalysis()" style="background:#0072ce; width:100%; justify-content:center;">
+                                    <i class="fas fa-calendar-check"></i> Asistencia
+                                </button>
+                                <button class="btn" onclick="generateRetentionReport()" style="background:#0072ce; width:100%; justify-content:center;">
+                                    <i class="fas fa-user-check"></i> Retención
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Reportes Institucionales -->
+                        <div style="padding:20px; border:1px solid #e6e6e6; border-radius:12px; background:linear-gradient(135deg, rgba(231,76,60,0.05), rgba(255,255,255,0.9));">
+                            <h4><i class="fas fa-building" style="color:#e74c3c; margin-right:8px;"></i>Reportes Institucionales</h4>
+                            <p style="font-size:0.9rem; color:#7f8c8d; margin:12px 0;">Informes ejecutivos y estadísticas.</p>
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                <button class="btn danger" onclick="generateExecutiveReport()" style="width:100%; justify-content:center;">
+                                    <i class="fas fa-file-contract"></i> Informe Ejecutivo
+                                </button>
+                                <button class="btn danger" onclick="generateResourceUtilization()" style="width:100%; justify-content:center;">
+                                    <i class="fas fa-chart-area"></i> Uso de Recursos
+                                </button>
+                                <button class="btn danger" onclick="generateComplianceReport()" style="width:100%; justify-content:center;">
+                                    <i class="fas fa-clipboard-check"></i> Cumplimiento
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top:20px; padding:20px; background:#f8f9fa; border-radius:12px;">
+                        <h4>📊 Dashboard de Indicadores Clave</h4>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:15px; margin-top:15px;">
+                            <div style="text-align:center; padding:15px; background:white; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                                <div style="font-size:1.8rem; font-weight:bold; color:#6a11cb;">87.3%</div>
+                                <div style="font-size:0.8rem; color:#7f8c8d;">Índice de Aprobación General</div>
+                            </div>
+                            <div style="text-align:center; padding:15px; background:white; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                                <div style="font-size:1.8rem; font-weight:bold; color:#27ae60;">92.1%</div>
+                                <div style="font-size:0.8rem; color:#7f8c8d;">Retención Estudiantil</div>
+                            </div>
+                            <div style="text-align:center; padding:15px; background:white; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                                <div style="font-size:1.8rem; font-weight:bold; color:#0072ce;">84.7%</div>
+                                <div style="font-size:0.8rem; color:#7f8c8d;">Asistencia Promedio</div>
+                            </div>
+                            <div style="text-align:center; padding:15px; background:white; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                                <div style="font-size:1.8rem; font-weight:bold; color:#f39c12;">96.2%</div>
+                                <div style="font-size:0.8rem; color:#7f8c8d;">Ocupación Docente</div>
+                            </div>
+                            <div style="text-align:center; padding:15px; background:white; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                                <div style="font-size:1.8rem; font-weight:bold; color:#e74c3c;">7.9%</div>
+                                <div style="font-size:0.8rem; color:#7f8c8d;">Tasa de Deserción</div>
+                            </div>
+                            <div style="text-align:center; padding:15px; background:white; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                                <div style="font-size:1.8rem; font-weight:bold; color:#9b59b6;">16.2</div>
+                                <div style="font-size:0.8rem; color:#7f8c8d;">Promedio General</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            showModal({ title: 'Reportes y Estadísticas', html });
+        }
+
+        // 6) Perfil del Coordinador
+        function showCoordinatorProfile() {
+            const html = `
+                <div>
+                    <h3>👤 Información Personal del Coordinador</h3>
+                    <p style="color:#7f8c8d;">Actualiza tu información personal e institucional.</p>
+                    
+                    <div class="tabs" style="margin-top:16px;">
+                        <button class="tab-btn active" onclick="showTab('personal-info')">Información Personal</button>
+                        <button class="tab-btn" onclick="showTab('institutional-info')">Información Institucional</button>
+                        <button class="tab-btn" onclick="showTab('coordinator-settings')">Configuración</button>
+                    </div>
+                    
+                    <div id="personal-info" class="tab-content active">
+                        <form id="coordinator-personal-form" style="margin-top:16px;">
+                            <div class="form-row">
+                                <div>
+                                    <label>Nombre completo</label>
+                                    <input type="text" name="nombre" value="Carlos Eduardo Morales Herrera" />
+                                </div>
+                                <div>
+                                    <label>Cédula</label>
+                                    <input type="text" name="cedula" value="V-8.765.432" readonly />
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div>
+                                    <label>Correo institucional</label>
+                                    <input type="email" name="correo" value="c.morales@upt.edu.ve" />
+                                </div>
+                                <div>
+                                    <label>Teléfono</label>
+                                    <input type="text" name="telefono" value="+58 424-555-1234" />
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div>
+                                    <label>Fecha de nacimiento</label>
+                                    <input type="date" name="fecha_nacimiento" value="1980-03-15" />
+                                </div>
+                                <div>
+                                    <label>Estado civil</label>
+                                    <select name="estado_civil">
+                                        <option value="soltero">Soltero</option>
+                                        <option value="casado" selected>Casado</option>
+                                        <option value="divorciado">Divorciado</option>
+                                        <option value="viudo">Viudo</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label>Dirección completa</label>
+                                <textarea name="direccion">Av. Bolívar, Urb. Los Coordinadores, Casa 42, La Victoria, Edo. Aragua</textarea>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div id="institutional-info" class="tab-content">
+                        <form id="coordinator-institutional-form" style="margin-top:16px;">
+                            <div class="form-row">
+                                <div>
+                                    <label>Código de empleado</label>
+                                    <input type="text" name="codigo_empleado" value="COORD-001-2024" readonly />
+                                </div>
+                                <div>
+                                    <label>Fecha de ingreso</label>
+                                    <input type="date" name="fecha_ingreso" value="2020-02-01" readonly />
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div>
+                                    <label>Área de coordinación</label>
+                                    <input type="text" name="area_coordinacion" value="Informática y Sistemas" />
+                                </div>
+                                <div>
+                                    <label>Sede principal</label>
+                                    <select name="sede">
+                                        <option value="principal" selected>Principal - La Victoria</option>
+                                        <option value="extension1">Extensión Maracay</option>
+                                        <option value="extension2">Extensión Cagua</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div>
+                                    <label>Título académico</label>
+                                    <input type="text" name="titulo" value="Doctor en Ciencias de la Computación" />
+                                </div>
+                                <div>
+                                    <label>Universidad de origen</label>
+                                    <input type="text" name="universidad" value="Universidad Central de Venezuela" />
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div>
+                                    <label>Años de experiencia docente</label>
+                                    <input type="number" name="experiencia_docente" value="15" min="0" />
+                                </div>
+                                <div>
+                                    <label>Años como coordinador</label>
+                                    <input type="number" name="experiencia_coordinacion" value="4" min="0" />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label>PNF bajo coordinación</label>
+                                <textarea name="pnf_coordinados" readonly>• PNF Informática (Presencial/Nocturno)
+• PNF Electrónica (Presencial)
+• PNF Sistemas (Mixto)</textarea>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div id="coordinator-settings" class="tab-content">
+                        <h4>Configuración del Portal</h4>
+                        <form id="coordinator-settings-form" style="margin-top:16px;">
+                            <div class="form-row">
+                                <div>
+                                    <label>Notificaciones por email</label>
+                                    <select name="email_notifications">
+                                        <option value="all" selected>Todas las notificaciones</option>
+                                        <option value="important">Solo importantes</option>
+                                        <option value="none">Desactivar</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Frecuencia de reportes automáticos</label>
+                                    <select name="report_frequency">
+                                        <option value="daily">Diario</option>
+                                        <option value="weekly" selected>Semanal</option>
+                                        <option value="monthly">Mensual</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div>
+                                    <label>Dashboard por defecto</label>
+                                    <select name="default_dashboard">
+                                        <option value="overview" selected>Resumen general</option>
+                                        <option value="students">Monitoreo estudiantil</option>
+                                        <option value="teachers">Gestión docente</option>
+                                        <option value="reports">Reportes</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Idioma del portal</label>
+                                    <select name="language">
+                                        <option value="es" selected>Español</option>
+                                        <option value="en">Inglés</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label>
+                                    <input type="checkbox" name="dual_role" checked style="width:auto; margin-right:8px;">
+                                    Habilitar módulos de docente (rol dual)
+                                </label>
+                                <small style="color:#7f8c8d; display:block; margin-top:4px;">
+                                    Activa las funciones de docente si también ejerces como profesor
+                                </small>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div style="margin-top:20px; display:flex; gap:10px; justify-content:flex-end;">
+                        <button class="btn primary" onclick="saveCoordinatorProfile()">
+                            <i class="fas fa-save"></i> Guardar Cambios
+                        </button>
+                        <button class="btn ghost" onclick="closeModal()">Cancelar</button>
+                    </div>
+                </div>
+            `;
+
+            showModal({ title: 'Perfil del Coordinador', html });
+        }
+
+        // Funciones auxiliares para tabs
+        function showTab(tabId) {
+            // Ocultar todos los contenidos
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            // Desactivar todos los botones
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Mostrar el contenido seleccionado
+            const targetContent = document.getElementById(tabId);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+            // Activar el botón correspondiente
+            event.target.classList.add('active');
+        }
+
+        // Funciones para módulos de docente (rol dual)
+        function showGradesManagement() {
+            const materias = [
+                { id: 'mat1', nombre: 'Algoritmos Avanzados', seccion: 'A', estudiantes: 22, evaluacionesPendientes: 1 },
+                { id: 'mat2', nombre: 'Investigación y Desarrollo', seccion: 'B', estudiantes: 18, evaluacionesPendientes: 0 }
+            ];
+
+            const rows = materias.map(m => `
+                <tr>
+                    <td><strong>${m.nombre}</strong></td>
+                    <td>${m.seccion}</td>
+                    <td>${m.estudiantes}</td>
+                    <td><span style="color: ${m.evaluacionesPendientes > 0 ? '#e74c3c' : '#27ae60'}">${m.evaluacionesPendientes}</span></td>
+                    <td>
+                        <button class="btn primary" onclick="openGradeEntry('${m.id}')" style="font-size:0.8rem; padding:4px 8px;">
+                            <i class="fas fa-edit"></i> Cargar Notas
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            const html = `
+                <div>
+                    <h3>📊 Carga de Notas (Rol Docente)</h3>
+                    <p style="color:#7f8c8d; margin-bottom:12px;">Como coordinador que también ejerce docencia, gestiona las calificaciones de tus materias asignadas.</p>
+                    <table>
+                        <thead>
+                            <tr><th>Materia</th><th>Sección</th><th>Estudiantes</th><th>Evaluaciones Pendientes</th><th>Acción</th></tr>
+                        </thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+            `;
+
+            showModal({ title: 'Carga de Notas - Coordinador/Docente', html });
+        }
+
+        function showEnrollmentManagement() {
+            const html = `
+                <div>
+                    <h3>📝 Gestión de Matrícula e Inscripciones</h3>
+                    <p style="color:#7f8c8d; margin-bottom:16px;">Supervisa y administra el proceso de matrícula de todos los PNF bajo tu coordinación.</p>
+                    
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="showTab('enrollment-overview')">Resumen de Matrícula</button>
+                        <button class="tab-btn" onclick="showTab('enrollment-process')">Proceso de Inscripción</button>
+                        <button class="tab-btn" onclick="showTab('section-changes')">Cambios de Sección</button>
+                    </div>
+                    
+                    <div id="enrollment-overview" class="tab-content active">
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin:15px 0;">
+                            <div style="background:white; padding:15px; border-radius:8px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+                                <div style="font-size:2rem; font-weight:bold; color:#6a11cb;">347</div>
+                                <div style="font-size:0.8rem; color:#7f8c8d;">Total Matriculados</div>
+                            </div>
+                            <div style="background:white; padding:15px; border-radius:8px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+                                <div style="font-size:2rem; font-weight:bold; color:#27ae60;">325</div>
+                                <div style="font-size:0.8rem; color:#7f8c8d;">Estudiantes Activos</div>
+                            </div>
+                            <div style="background:white; padding:15px; border-radius:8px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+                                <div style="font-size:2rem; font-weight:bold; color:#f39c12;">45</div>
+                                <div style="font-size:0.8rem; color:#7f8c8d;">Nuevos Ingresos</div>
+                            </div>
+                            <div style="background:white; padding:15px; border-radius:8px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+                                <div style="font-size:2rem; font-weight:bold; color:#e74c3c;">12</div>
+                                <div style="font-size:0.8rem; color:#7f8c8d;">Solicitudes Pendientes</div>
+                            </div>
+                        </div>
+                        
+                        <h4>Matrícula por PNF y Trayecto</h4>
+                        <table style="margin-top:12px;">
+                            <thead>
+                                <tr><th>PNF</th><th>Trayecto I</th><th>Trayecto II</th><th>Trayecto III</th><th>Trayecto IV</th><th>Total</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Informática</strong></td>
+                                    <td>45</td><td>42</td><td>38</td><td>31</td><td><strong>156</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Electrónica</strong></td>
+                                    <td>28</td><td>25</td><td>24</td><td>21</td><td><strong>98</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Sistemas</strong></td>
+                                    <td>25</td><td>24</td><td>23</td><td>21</td><td><strong>93</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="enrollment-process" class="tab-content">
+                        <h4>Estado del Proceso de Inscripción 2024-I</h4>
+                        <div style="margin:15px 0;">
+                            <div class="assignment-item" style="border-left:4px solid #27ae60;">
+                                <div>
+                                    <strong style="color:#27ae60;">Inscripciones Completadas</strong><br>
+                                    <small>325 estudiantes han completado su inscripción</small>
+                                </div>
+                                <div style="text-align:right;">
+                                    <strong style="color:#27ae60;">93.6%</strong>
+                                </div>
+                            </div>
+                            <div class="assignment-item" style="border-left:4px solid #f39c12;">
+                                <div>
+                                    <strong style="color:#f39c12;">En Proceso</strong><br>
+                                    <small>12 estudiantes pendientes por documentación</small>
+                                </div>
+                                <div style="text-align:right;">
+                                    <strong style="color:#f39c12;">3.5%</strong>
+                                </div>
+                            </div>
+                            <div class="assignment-item" style="border-left:4px solid #e74c3c;">
+                                <div>
+                                    <strong style="color:#e74c3c;">Solicitudes Rechazadas</strong><br>
+                                    <small>10 solicitudes por documentación incompleta</small>
+                                </div>
+                                <div style="text-align:right;">
+                                    <strong style="color:#e74c3c;">2.9%</strong>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;">
+                            <button class="btn success" onclick="approveEnrollments()">
+                                <i class="fas fa-check"></i> Aprobar Pendientes
+                            </button>
+                            <button class="btn warning" onclick="reviewDocuments()">
+                                <i class="fas fa-file-alt"></i> Revisar Documentos
+                            </button>
+                            <button class="btn" onclick="generateEnrollmentReport()" style="background:#0072ce;">
+                                <i class="fas fa-file-pdf"></i> Generar Reporte
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="section-changes" class="tab-content">
+                        <h4>Solicitudes de Cambio de Sección</h4>
+                        <div style="margin:15px 0;">
+                            <div class="assignment-item">
+                                <div>
+                                    <strong>Juan Carlos Méndez (V-28.456.789)</strong><br>
+                                    <small>PNF Informática - De Sección A a Sección B (Trayecto II)</small><br>
+                                    <small style="color:#7f8c8d;">Motivo: Conflicto de horario laboral</small>
+                                </div>
+                                <div style="display:flex; gap:5px;">
+                                    <button class="btn success" onclick="approveSectionChange()" style="font-size:0.8rem; padding:4px 8px;">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button class="btn danger" onclick="rejectSectionChange()" style="font-size:0.8rem; padding:4px 8px;">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="assignment-item">
+                                <div>
+                                    <strong>Ana María Rodríguez (V-27.123.456)</strong><br>
+                                    <small>PNF Electrónica - De Sección B a Sección A (Trayecto I)</small><br>
+                                    <small style="color:#7f8c8d;">Motivo: Cambio de residencia</small>
+                                </div>
+                                <div style="display:flex; gap:5px;">
+                                    <button class="btn success" onclick="approveSectionChange()" style="font-size:0.8rem; padding:4px 8px;">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button class="btn danger" onclick="rejectSectionChange()" style="font-size:0.8rem; padding:4px 8px;">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            showModal({ title: 'Gestión de Matrícula', html });
+        }
+
+        function showAcademicInfo() {
+            const fechas = [
+                { fecha: '2024-09-25', titulo: 'Fecha límite - Carga de notas parciales 2', tipo: 'urgente' },
+                { fecha: '2024-10-01', titulo: 'Reunión de coordinadores - Evaluación período', tipo: 'importante' },
+                { fecha: '2024-10-10', titulo: 'Fecha límite - Carga de notas finales', tipo: 'importante' },
+                { fecha: '2024-10-15', titulo: 'Cierre del período académico 2024-I', tipo: 'info' },
+                { fecha: '2024-10-20', titulo: 'Entrega de informes de coordinación', tipo: 'importante' },
+                { fecha: '2024-11-01', titulo: 'Inicio período 2024-II', tipo: 'info' },
+                { fecha: '2024-11-05', titulo: 'Planificación académica 2024-II', tipo: 'importante' }
+            ];
+
+            const rows = fechas.map(f => {
+                const fecha = new Date(f.fecha);
+                const color = f.tipo === 'urgente' ? '#e74c3c' : f.tipo === 'importante' ? '#f39c12' : '#6a11cb';
+                return `
+                    <tr>
+                        <td>${fecha.toLocaleDateString('es-VE')}</td>
+                        <td>${f.titulo}</td>
+                        <td><span style="color:${color}; font-weight:600;">${f.tipo.toUpperCase()}</span></td>
+                    </tr>
+                `;
+            }).join('');
+
+            const html = `
+                <div>
+                    <h3>📅 Información Académica y Calendario Institucional</h3>
+                    <p style="color:#7f8c8d;">Cronograma y fechas importantes para coordinadores académicos.</p>
+                    
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin:16px 0;">
+                        <div style="padding:12px; background:linear-gradient(135deg, rgba(231,76,60,0.1), rgba(255,255,255,0.9)); border-radius:8px; border-left:4px solid #e74c3c;">
+                            <strong style="color:#e74c3c;">2 días</strong><br>
+                            <small>Para cierre de notas parciales</small>
+                        </div>
+                        <div style="padding:12px; background:linear-gradient(135deg, rgba(243,156,18,0.1), rgba(255,255,255,0.9)); border-radius:8px; border-left:4px solid #f39c12;">
+                            <strong style="color:#f39c12;">17 días</strong><br>
+                            <small>Para cierre de notas finales</small>
+                        </div>
+                        <div style="padding:12px; background:linear-gradient(135deg, rgba(106,17,203,0.1), rgba(255,255,255,0.9)); border-radius:8px; border-left:4px solid #6a11cb;">
+                            <strong style="color:#6a11cb;">38 días</strong><br>
+                            <small>Para inicio 2024-II</small>
+                        </div>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr><th>Fecha</th><th>Evento</th><th>Prioridad</th></tr>
+                        </thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                    
+                    <div style="margin-top:16px; padding:12px; background:#f8f9fa; border-radius:8px;">
+                        <strong>Responsabilidades del coordinador:</strong><br>
+                        <small>• Supervisar la carga de notas de todos los docentes de tu área</small><br>
+                        <small>• Entregar informes de gestión académica en las fechas establecidas</small><br>
+                        <small>• Participar en reuniones de coordinación institucional</small><br>
+                        <small>• Planificar ofertas académicas para el próximo período</small>
+                    </div>
+                </div>
+            `;
+
+            showModal({ title: 'Información Académica', html });
+        }
+
+        function showScheduleManagement() {
+            const conflicts = [
+                { docente: 'Prof. Ana López', materia1: 'Matemática I-A', materia2: 'Estadística-B', horario: 'Lun 9:00-11:00', tipo: 'Docente' },
+                { aula: 'Lab-1', materia1: 'Programación I-A', materia2: 'Bases de Datos-B', horario: 'Mar 14:00-16:00', tipo: 'Aula' }
+            ];
+
+            const html = `
+                <div>
+                    <h3>🕒 Gestión Integral de Horarios</h3>
+                    <p style="color:#7f8c8d; margin-bottom:16px;">Administra horarios, resuelve conflictos y optimiza el uso de recursos.</p>
+                    
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="showTab('schedule-overview')">Resumen de Horarios</button>
+                        <button class="tab-btn" onclick="showTab('schedule-conflicts')">Conflictos</button>
+                        <button class="tab-btn" onclick="showTab('classroom-assignment')">Asignación de Aulas</button>
+                    </div>
+                    
+                    <div id="schedule-overview" class="tab-content active">
+                        <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
+                            <button class="btn success" onclick="createSchedule()">
+                                <i class="fas fa-plus"></i> Nuevo Horario
+                            </button>
+                            <button class="btn warning" onclick="optimizeSchedules()">
+                                <i class="fas fa-magic"></i> Optimizar Horarios
+                            </button>
+                            <button class="btn" onclick="exportSchedules()" style="background:#0072ce;">
+                                <i class="fas fa-download"></i> Exportar Horarios
+                            </button>
+                        </div>
+                        
+                        <h4>Ocupación por Turnos</h4>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:15px; margin:15px 0;">
+                            <div style="background:white; padding:15px; border-radius:8px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+                                <div style="font-size:1.5rem; font-weight:bold; color:#27ae60;">85%</div>
+                                <div style="font-size:0.8rem; color:#7f8c8d;">Turno Mañana</div>
+                                <div class="progress" style="margin-top:8px;"><div style="width:85%; background:#27ae60;"></div></div>
+                            </div>
+                            <div style="background:white; padding:15px; border-radius:8px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+                                <div style="font-size:1.5rem; font-weight:bold; color:#f39c12;">72%</div>
+                                <div style="font-size:0.8rem; color:#7f8c8d;">Turno Tarde</div>
+                                <div class="progress" style="margin-top:8px;"><div style="width:72%; background:#f39c12;"></div></div>
+                            </div>
+                            <div style="background:white; padding:15px; border-radius:8px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+                                <div style="font-size:1.5rem; font-weight:bold; color:#6a11cb;">61%</div>
+                                <div style="font-size:0.8rem; color:#7f8c8d;">Turno Noche</div>
+                                <div class="progress" style="margin-top:8px;"><div style="width:61%; background:#6a11cb;"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="schedule-conflicts" class="tab-content">
+                        <h4>Conflictos de Horario Detectados</h4>
+                        <div style="margin-top:15px;">
+                            ${conflicts.map(c => `
+                                <div class="assignment-item" style="border-left:4px solid #e74c3c;">
+                                    <div>
+                                        <strong style="color:#e74c3c;">Conflicto de ${c.tipo}</strong><br>
+                                        ${c.tipo === 'Docente' ? 
+                                            `<small>Docente: ${c.docente}</small><br><small>Materias: ${c.materia1} vs ${c.materia2}</small>` : 
+                                            `<small>Aula: ${c.aula}</small><br><small>Materias: ${c.materia1} vs ${c.materia2}</small>`
+                                        }<br>
+                                        <small style="color:#7f8c8d;">Horario: ${c.horario}</small>
+                                    </div>
+                                    <div>
+                                        <button class="btn warning" onclick="resolveConflict()" style="font-size:0.8rem; padding:4px 8px;">
+                                            <i class="fas fa-tools"></i> Resolver
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${conflicts.length === 0 ? '<p style="text-align:center; color:#27ae60; margin-top:20px;">No hay conflictos de horario detectados</p>' : ''}
+                    </div>
+                    
+                    <div id="classroom-assignment" class="tab-content">
+                        <h4>Gestión de Aulas y Espacios</h4>
+                        <table style="margin-top:15px;">
+                            <thead>
+                                <tr><th>Aula</th><th>Capacidad</th><th>Tipo</th><th>Ocupación</th><th>Estado</th><th>Acciones</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>A-101</strong></td>
+                                    <td>35</td>
+                                    <td>Aula teórica</td>
+                                    <td>
+                                        <div class="progress"><div style="width:85%; background:#27ae60;"></div></div>
+                                        <small>85% ocupada</small>
+                                    </td>
+                                    <td><span style="color:#27ae60;">Disponible</span></td>
+                                    <td>
+                                        <button class="btn ghost" onclick="manageClassroom('A-101')" style="font-size:0.8rem; padding:3px 6px;">
+                                            <i class="fas fa-cog"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Lab-1</strong></td>
+                                    <td>25</td>
+                                    <td>Laboratorio</td>
+                                    <td>
+                                        <div class="progress"><div style="width:95%; background:#e74c3c;"></div></div>
+                                        <small>95% ocupada</small>
+                                    </td>
+                                    <td><span style="color:#f39c12;">Saturada</span></td>
+                                    <td>
+                                        <button class="btn ghost" onclick="manageClassroom('Lab-1')" style="font-size:0.8rem; padding:3px 6px;">
+                                            <i class="fas fa-cog"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>B-201</strong></td>
+                                    <td>40</td>
+                                    <td>Aula magna</td>
+                                    <td>
+                                        <div class="progress"><div style="width:60%; background:#6a11cb;"></div></div>
+                                        <small>60% ocupada</small>
+                                    </td>
+                                    <td><span style="color:#27ae60;">Disponible</span></td>
+                                    <td>
+                                        <button class="btn ghost" onclick="manageClassroom('B-201')" style="font-size:0.8rem; padding:3px 6px;">
+                                            <i class="fas fa-cog"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            showModal({ title: 'Gestión de Horarios', html });
+        }
+
+        // Funciones auxiliares para las acciones
+        function saveCoordinatorProfile() {
+            showNotification('Perfil del coordinador actualizado correctamente.', 'success');
+            closeModal();
+        }
+
+        // Funciones de ejemplo para acciones específicas
+        function createNewPNF() { showNotification('Función para crear nuevo PNF.', 'info'); }
+        function editPNF(id) { showNotification(`Editando PNF: ${id}`, 'info'); }
+        function viewPNFDetails(id) { showNotification(`Visualizando detalles del PNF: ${id}`, 'info'); }
+        function manageCurriculum(id) { showNotification(`Gestionando currículo del PNF: ${id}`, 'info'); }
+        function generatePNFReport() { showNotification('Generando reporte general de PNF...', 'info'); }
+        function manageOffers() { showNotification('Abriendo gestión de ofertas académicas...', 'info'); }
+        
+        function addNewSubject() { showNotification('Función para agregar nueva materia.', 'info'); }
+        function editSubject(codigo) { showNotification(`Editando materia: ${codigo}`, 'info'); }
+        function manageSchedule(codigo) { showNotification(`Gestionando horario de: ${codigo}`, 'info'); }
+        function importCurriculum() { showNotification('Importando estructura curricular...', 'info'); }
+        function validateCurriculum() { showNotification('Validando estructura curricular...', 'info'); }
+        
+        function createNewAssignment() { showNotification('Creando nueva asignación docente...', 'info'); }
+        function editAssignment(id) { showNotification(`Editando asignación del docente ID: ${id}`, 'info'); }
+        function viewTeacherDetails(id) { showNotification(`Visualizando detalles del docente ID: ${id}`, 'info'); }
+        function assignTeacher(codigo) { showNotification(`Asignando docente a materia: ${codigo}`, 'info'); }
+        function redistributeWorkload() { showNotification('Redistribuyendo carga horaria...', 'info'); }
+        function exportAssignments() { showNotification('Exportando asignaciones docentes...', 'info'); }
+        
+        function generateRiskReport() { showNotification('Generando reporte de estudiantes en riesgo...', 'info'); }
+        function sendAlerts() { showNotification('Enviando alertas a docentes y estudiantes...', 'info'); }
+        function scheduleInterventions() { showNotification('Programando intervenciones académicas...', 'info'); }
+        function viewStudentProfile(cedula) { showNotification(`Visualizando perfil del estudiante: ${cedula}`, 'info'); }
+        function createIntervention(cedula) { showNotification(`Creando intervención para estudiante: ${cedula}`, 'info'); }
+        function generateExcellenceReport() { showNotification('Generando reporte de excelencia académica...', 'info'); }
+        function recognitionProgram() { showNotification('Abriendo programa de reconocimiento...', 'info'); }
+        function mentorshipProgram() { showNotification('Gestionando programa de tutoría...', 'info'); }
+        function nominateRecognition(cedula) { showNotification(`Nominando estudiante para reconocimiento: ${cedula}`, 'info'); }
+        function handleCriticalAlert() { showNotification('Atendiendo alerta crítica...', 'info'); }
+        function handleModerateAlert() { showNotification('Revisando alerta moderada...', 'info'); }
+        function handleNewStudents() { showNotification('Programando seguimiento de nuevos estudiantes...', 'info'); }
+        
+        // Funciones de reportes
+        function generateAcademicPerformance() { showNotification('Generando reporte de rendimiento académico...', 'info'); }
+        function generateApprovalRates() { showNotification('Calculando índices de aprobación...', 'info'); }
+        function generateDropoutAnalysis() { showNotification('Analizando patrones de deserción...', 'info'); }
+        function generateTeacherWorkload() { showNotification('Generando reporte de carga docente...', 'info'); }
+        function generateAssignmentReport() { showNotification('Exportando reporte de asignaciones...', 'info'); }
+        function generateTeacherEvaluation() { showNotification('Generando evaluación docente...', 'info'); }
+        function generateEnrollmentReport() { showNotification('Procesando reporte de matrícula...', 'info'); }
+        function generateAttendanceAnalysis() { showNotification('Analizando patrones de asistencia...', 'info'); }
+        function generateRetentionReport() { showNotification('Calculando índices de retención...', 'info'); }
+        function generateExecutiveReport() { showNotification('Generando informe ejecutivo...', 'info'); }
+        function generateResourceUtilization() { showNotification('Analizando uso de recursos...', 'info'); }
+        function generateComplianceReport() { showNotification('Generando reporte de cumplimiento...', 'info'); }
+        
+        // Funciones de matrícula
+        function approveEnrollments() { showNotification('Aprobando inscripciones pendientes...', 'success'); }
+        function reviewDocuments() { showNotification('Revisando documentación...', 'info'); }
+        function approveSectionChange() { showNotification('Cambio de sección aprobado.', 'success'); }
+        function rejectSectionChange() { showNotification('Cambio de sección rechazado.', 'info'); }
+        
+        // Funciones de horarios
+        function createSchedule() { showNotification('Creando nuevo horario...', 'info'); }
+        function optimizeSchedules() { showNotification('Optimizando distribución de horarios...', 'info'); }
+        function exportSchedules() { showNotification('Exportando horarios...', 'info'); }
+        function resolveConflict() { showNotification('Resolviendo conflicto de horario...', 'info'); }
+        function manageClassroom(aula) { showNotification(`Gestionando aula: ${aula}`, 'info'); }
+        
+        // Función para abrir entrada de notas (heredada del módulo docente)
+        function openGradeEntry(materiaId) {
+            const estudiantes = [
+                { ci: 'V-25.123.456', nombre: 'Pedro Luis Castillo', eval1: 17, eval2: null, final: null },
+                { ci: 'V-24.789.012', nombre: 'Carmen Elena Díaz', eval1: 19, eval2: 18, final: null },
+                { ci: 'V-26.345.678', nombre: 'Rafael Antonio Moreno', eval1: 16, eval2: null, final: null }
+            ];
+
+            const rows = estudiantes.map((est, idx) => `
+                <div class="student-row">
+                    <div style="flex:1;">
+                        <strong>${est.nombre}</strong><br>
+                        <small style="color:#7f8c8d;">${est.ci}</small>
+                    </div>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <div>
+                            <label style="font-size:0.8rem;">Eval 1</label>
+                            <input type="number" class="grade-input" min="0" max="20" value="${est.eval1 || ''}" style="max-width:60px; text-align:center;">
+                        </div>
+                        <div>
+                            <label style="font-size:0.8rem;">Eval 2</label>
+                            <input type="number" class="grade-input" min="0" max="20" value="${est.eval2 || ''}" style="max-width:60px; text-align:center;">
+                        </div>
+                        <div>
+                            <label style="font-size:0.8rem;">Final</label>
+                            <input type="number" class="grade-input" min="0" max="20" value="${est.final || ''}" style="max-width:60px; text-align:center;">
+                        </div>
+                        <div style="font-weight:600; color:#6a11cb; min-width:50px;">
+                            ${calcularPromedio(est.eval1, est.eval2, est.final)}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            const html = `
+                <div>
+                    <h3>✏️ Cargar Notas - Algoritmos Avanzados (Sección A)</h3>
+                    <p style="color:#7f8c8d; margin-bottom:12px;">Como coordinador con funciones docentes, gestiona las calificaciones de tus estudiantes.</p>
+                    
+                    <div style="margin-bottom:16px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#f8f9fa; border-radius:8px; font-weight:600;">
+                            <span>Estudiante</span>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <span style="width:60px; text-align:center;">Eval 1</span>
+                                <span style="width:60px; text-align:center;">Eval 2</span>
+                                <span style="width:60px; text-align:center;">Final</span>
+                                <span style="width:50px; text-align:center;">Promedio</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="max-height:350px; overflow-y:auto; border:1px solid #e6e6e6; border-radius:8px;">
+                        ${rows}
+                    </div>
+                    
+                    <div style="margin-top:16px; display:flex; gap:10px; justify-content:flex-end;">
+                        <button class="btn ghost" onclick="closeModal()">Cancelar</button>
+                        <button class="btn success" onclick="saveGrades()">
+                            <i class="fas fa-save"></i> Guardar Notas
+                        </button>
+                        <button class="btn warning" onclick="exportGrades()">
+                            <i class="fas fa-file-excel"></i> Exportar Acta
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            showModal({ title: 'Carga de Notas', html });
+        }
+
+        function calcularPromedio(eval1, eval2, final) {
+            const notas = [eval1, eval2, final].filter(n => n && n > 0);
+            if (notas.length === 0) return '--';
+            const suma = notas.reduce((a, b) => a + b, 0);
+            return (suma / notas.length).toFixed(1);
+        }
+
+        function saveGrades() {
+            showNotification('Calificaciones guardadas correctamente.', 'success');
+            closeModal();
+        }
+
+        function exportGrades() {
+            showNotification('Acta de notas exportada a Excel.', 'success');
+        }
+
+        // Confirmación de cierre de sesión
+        function confirmLogout() {
+            const confirmed = confirm('¿Desea cerrar sesión?');
+            if (confirmed) {
+                showNotification('Sesión cerrada. Redirigiendo...', 'info');
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 600);
+            } else {
+                showNotification('Acción cancelada.', 'info');
+            }
+        }
+
+    </script>
+</body>
+</html>
