@@ -81,6 +81,14 @@
     </div>
 </div>
 
+<div id="modal-mensaje" class="modal" style="display:none;">
+  <div class="modal-content">
+    <h3 id="modal-titulo"></h3>
+    <p id="modal-texto"></p>
+    <button type="button" class="btn btn-primary" onclick="cerrarModalMensaje()">Cerrar</button>
+  </div>
+</div>
+
 <script>
     // Selector de tipo de usuario
     document.querySelectorAll('.user-type-btn').forEach(btn => {
@@ -111,20 +119,37 @@
     });
 
     // Funciones para los enlaces
+    function mostrarModalMensaje(titulo, texto) {
+        document.getElementById('modal-titulo').innerText = titulo;
+        document.getElementById('modal-texto').innerHTML = texto;
+        document.getElementById('modal-mensaje').style.display = 'flex';
+    }
+
+    function cerrarModalMensaje() {
+        document.getElementById('modal-mensaje').style.display = 'none';
+    }
+
     function showForgotPassword() {
-        alert('Para recuperar su contraseña:\n\n' +
-              '• Estudiantes: Contacte al Depto. de Sistemas\n' +
-              '• Docentes: Contacte a Recursos Humanos\n' +
-              '• Personal: Contacte a su supervisor directo\n\n' +
-              'Email: sistemas@universidad.edu.ve');
+        mostrarModalMensaje(
+            '¿Olvidó su contraseña?',
+            'La recuperación de contraseña aún se encuentra en desarrollo.<br><br>' +
+            'Le pedimos paciencia mientras habilitamos esta funcionalidad.<br>' +
+            'Si necesita acceso urgente, por favor comuníquese con la administración.<br><br>' +
+            '<em>¡Gracias por su comprensión y confianza en nuestro sistema académico!</em>'
+        );
     }
 
     function showHelp() {
-        alert('Ayuda de acceso:\n\n' +
-              '• Estudiantes: Use su cédula como usuario\n' +
-              '• Docentes: Use el usuario enviado a su email\n' +
-              '• Personal: Use su usuario institucional\n\n' +
-              'Para soporte: WhatsApp +58 412-1234567');
+        mostrarModalMensaje(
+            'Ayuda de acceso',
+            'Por favor, ingrese sus credenciales correctamente:<br>' +
+            '• <b>Nombre de usuario</b> y <b>clave</b>.<br><br>' +
+            'Si es <b>nuevo estudiante</b>, debe realizar su preinscripción usando el enlace correspondiente.<br>' +
+            'Si ya es estudiante pero no posee usuario, por favor diríjase a la administración para solicitarlo.<br>' +
+            '<span style="color:#888;">(Este proceso para estudiantes regulares también está en desarrollo. Por ahora, solo los de nuevo ingreso pueden preinscribirse en línea).</span><br><br>' +
+            'Si es <b>docente</b> o pertenece a otro rol, acuda a la administración para gestionar su acceso.<br><br>' +
+            '<em>¡Gracias por su paciencia y colaboración!</em>'
+        );
     }
 
     // Efectos de animación al cargar
@@ -173,5 +198,9 @@
             }
         });
     });
+
+    function cerrarModalMensaje() {
+      document.getElementById('modal-mensaje').style.display = 'none';
+    }
 </script>
 {% endblock %}

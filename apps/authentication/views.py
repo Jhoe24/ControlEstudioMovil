@@ -14,6 +14,9 @@ from django.utils.decorators import method_decorator
 import sqlite3
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from apps.core.models import PNF
+import openpyxl
+from django.http import HttpResponse
 
 
 def rol_requerido(roles_permitidos):
@@ -71,7 +74,7 @@ def registro_view(request):
     if request.method == 'POST':
         cedula = request.POST.get('cedula')
         usuario = request.POST.get('usuario')
-        pnf = request.POST.get('pnf')
+        pnf_id = request.POST.get('pnf')
 
         # Buscar usuario por cédula o username
         usuario_existente = Usuario.objects.filter(cedula=cedula).first() or Usuario.objects.filter(username=usuario).first()
@@ -80,28 +83,31 @@ def registro_view(request):
             show_modal = True
             if usuario_existente.pnf:
                 pnf_actual_nombre = str(usuario_existente.pnf)
-            if pnf:
-                from .models import PNF
+            if pnf_id:
                 try:
-                    pnf_nuevo_nombre = str(PNF.objects.get(pk=pnf))
+                    pnf_nuevo_nombre = str(PNF.objects.get(pk=pnf_id))
                 except:
                     pnf_nuevo_nombre = None
                 
             # Si viene confirmación de cambiar PNF
             if request.POST.get('confirmar_cambio_pnf') == '1':
-                usuario_existente.pnf_id = pnf
-                usuario_existente.save()
-                request.session['usuario_registrado'] = {
-                    'nombre': usuario_existente.nombre,
-                    'apellido': usuario_existente.apellido,
-                    'cedula': usuario_existente.cedula,
-                    'email': usuario_existente.email,
-                    'telefono': usuario_existente.telefono,
-                    'pnf_nombre': str(usuario_existente.pnf) if usuario_existente.pnf else '',
-                    'fecha_oferta': timezone.now().strftime('%d/%m/%Y'),
-                }
-                messages.success(request, 'Oferta académica actualizada exitosamente')
-                return redirect('registration_success')
+                if not PNF.objects.filter(id=pnf_id).exists():
+                    messages.error(request, 'El PNF seleccionado no existe.')
+                    # Muestra el formulario nuevamente o maneja el error
+                else:
+                    usuario_existente.pnf_id = pnf_id
+                    usuario_existente.save()
+                    request.session['usuario_registrado'] = {
+                        'nombre': usuario_existente.nombre,
+                        'apellido': usuario_existente.apellido,
+                        'cedula': usuario_existente.cedula,
+                        'email': usuario_existente.email,
+                        'telefono': usuario_existente.telefono,
+                        'pnf_nombre': str(usuario_existente.pnf) if usuario_existente.pnf else '',
+                        'fecha_oferta': timezone.now().strftime('%d/%m/%Y'),
+                    }
+                    messages.success(request, 'Oferta académica actualizada exitosamente')
+                    return redirect('registration_success')
         else:
             try:
                 nombre = request.POST['nombre']
@@ -119,7 +125,7 @@ def registro_view(request):
                     cedula=cedula,
                     telefono=telefono,
                     fecha_nacimiento=fecha_nacimiento,
-                    pnf_id=pnf
+                    pnf_id=pnf_id
                 )
                 user.set_password(clave_aleatoria)
                 user.clave_visible = clave_aleatoria
@@ -311,6 +317,39 @@ def exportar_verificados(request):
         conn.close()
         return JsonResponse({'mensaje': 'Estudiantes exportados exitosamente.', 'status': 'success'})
     return JsonResponse({'mensaje': 'Método no permitido.', 'status': 'error'})
+
+
+@login_required
+@rol_requerido(['personal'])
+def exportar_lista_estudiantes(request):
+    # Filtra los estudiantes verificados
+    estudiantes = Usuario.objects.filter(rol='estudiante', is_active=True)
+
+    # Crea el libro y la hoja
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Estudiantes Verificados"
+
+    # Escribe los encabezados
+    ws.append(['Cédula', 'Nombre', 'Apellido', 'Fecha de Ingreso', 'Fecha de Nacimiento'])
+
+    # Escribe los datos
+    for est in estudiantes:
+        ws.append([
+            est.cedula,
+            est.nombre,
+            est.apellido,
+            est.date_joined.strftime('%d/%m/%Y') if est.date_joined else '',
+            est.fecha_nacimiento.strftime('%d/%m/%Y') if est.fecha_nacimiento else '',
+        ])
+
+    # Prepara la respuesta
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename=estudiantes_verificados.xlsx'
+    wb.save(response)
+    return response
 
 
 

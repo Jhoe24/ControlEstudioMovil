@@ -1,5 +1,6 @@
 from django import forms
-from .models import Usuario, PNF
+from .models import Usuario
+from apps.core.models import PNF
 
 class RegistroForm(forms.ModelForm):
     fecha_nacimiento = forms.DateField(

@@ -6,7 +6,8 @@
 
 body {
   font-family: "Arial", sans-serif;
-  background-image: url("../images/img/logo.jpg"), linear-gradient(135deg, #74ebd5, #acb6e5);
+  background-image: url("../images/img/logo.jpg"),
+    linear-gradient(135deg, #74ebd5, #acb6e5);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -459,4 +460,36 @@ button[type="submit"].loading:before {
     display: block;
     margin: 8px 0;
   }
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.modal-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+.modal-content button {
+  margin-top: 1.5rem;
+  padding: 0.5rem 1rem;
+  background: #0072ce;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }

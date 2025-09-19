@@ -3,7 +3,7 @@ from django.urls import path, include
 from apps.authentication.views import (
     login_view, registro_view, registration_success, jefe_panel, estudiante_portal,
     docente_portal, coodinador_panel, administrativo_panel, error_404_view,
-    error_500_view, aceptar_estudiante, exportar_verificados
+    error_500_view, aceptar_estudiante, exportar_verificados, exportar_lista_estudiantes
 )
 from django.conf import settings
 from django.conf.urls.static import static
@@ -24,6 +24,7 @@ urlpatterns = [
     path('error/404/', error_404_view, name='error_404'),
     path('error/500/', error_500_view, name='error_500'),
     path('exportar_verificados/', exportar_verificados, name='exportar_verificados'),
+    path('exportar_lista_estudiantes/', exportar_lista_estudiantes, name='exportar_lista_estudiantes'),
 ]
 
 handler404 = 'apps.authentication.views.error_404_view'

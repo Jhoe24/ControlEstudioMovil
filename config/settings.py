@@ -114,7 +114,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 #   'http://192.168.10.183:8888/' o /static/
-STATIC_URL = 'http://192.168.10.161:8888/'
+STATIC_URL = 'http://192.168.10.174:8888/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
@@ -129,7 +129,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'           # Cambia esto si usas otro proveedor
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'andypalma1111@gmail.com' # Tu correo
-EMAIL_HOST_PASSWORD = 'cqco pleg nmkj seyz'   # Tu contraseña o app password
+EMAIL_HOST_USER = 'upt.barinas.jose.felix.ribas@gmail.com' # Tu correo
+EMAIL_HOST_PASSWORD = 'cchl qtat frgr rsag'   # Tu contraseña o app password
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
