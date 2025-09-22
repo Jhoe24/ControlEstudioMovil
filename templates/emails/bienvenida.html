@@ -311,8 +311,8 @@
             font-size: 1.1rem;
         }
 
-        /* Información de contacto destacada */
-        .support-box {
+        /* Información importante del sistema */
+        .system-info {
             background: rgba(255, 193, 7, 0.1);
             border: 2px solid rgba(255, 193, 7, 0.3);
             border-radius: 12px;
@@ -320,7 +320,7 @@
             margin: 30px 0;
         }
 
-        .support-box h4 {
+        .system-info h4 {
             color: #856404;
             font-size: 1.2rem;
             margin-bottom: 15px;
@@ -329,37 +329,10 @@
             gap: 10px;
         }
 
-        .support-contacts {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .support-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 8px;
-        }
-
-        .support-item i {
-            color: #ffc107;
-            font-size: 1.2rem;
-            width: 25px;
-            text-align: center;
-        }
-
-        .support-item a {
+        .system-info p {
             color: #856404;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .support-item a:hover {
-            color: #0072CE;
+            line-height: 1.6;
+            margin-bottom: 10px;
         }
 
         /* Footer */
@@ -458,10 +431,6 @@
                 text-align: left;
             }
 
-            .support-contacts {
-                grid-template-columns: 1fr;
-            }
-
             .contact-item {
                 display: block;
                 margin: 8px 0;
@@ -501,7 +470,7 @@
             <div class="email-body">
                 <p><strong>¡Felicitaciones y bienvenido/a a la Universidad Politecnica Territorial "Jose Felix Ribas" del estado Barinas!</strong></p>
                 
-                <p>Nos complace informarte que tu proceso de preinscripción ha sido completado exitosamente. Ahora formas parte de nuestra prestigiosa comunidad académica, donde miles de estudiantes han forjado su futuro profesional.</p>
+                <p>Nos complace informarte que tu proceso de preinscripción ha sido completado exitosamente. Ahora formas parte de nuestra comunidad académica, donde miles de estudiantes han forjado su futuro profesional.</p>
 
                 <p>Tu compromiso con la excelencia académica te ha traído hasta aquí, y estamos seguros de que juntos lograremos grandes cosas durante tu formación universitaria.</p>
             </div>
@@ -523,9 +492,33 @@
                 </div>
                 <div class="data-row">
                     <span class="data-label">
-                        <i class="fas fa-envelope"></i> Email Institucional:
+                        <i class="fas fa-flag"></i> Nacionalidad:
+                    </span>
+                    <span class="data-value">{{ nacionalidad }}</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">
+                        <i class="fas fa-venus-mars"></i> Sexo:
+                    </span>
+                    <span class="data-value">{{ sexo }}</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">
+                        <i class="fas fa-birthday-cake"></i> Fecha de Nacimiento:
+                    </span>
+                    <span class="data-value">{{ fecha_nacimiento }}</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">
+                        <i class="fas fa-envelope"></i> Correo Electrónico:
                     </span>
                     <span class="data-value">{{ email }}</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">
+                        <i class="fas fa-user-tag"></i> Nombre de Usuario:
+                    </span>
+                    <span class="data-value">{{ nombre_usuario }}</span>
                 </div>
                 <div class="data-row">
                     <span class="data-label">
@@ -552,50 +545,28 @@
                 <h4><i class="fas fa-list-check"></i> Tus Próximos Pasos</h4>
                 <ol class="steps-list">
                     <li><strong>Activar tu cuenta:</strong> Utiliza las credenciales enviadas para acceder al sistema por primera vez.</li>
+                    <li><strong>Cambiar tu contraseña:</strong> Una vez dentro del sistema, actualiza tu contraseña temporal por una personalizada y segura.</li>
                     <li><strong>Completar tu perfil:</strong> Actualiza tu información personal y sube tu fotografía oficial.</li>
-                    <li><strong>Revisar el pensum:</strong> Consulta las materias de tu carrera y los prerrequisitos.</li>
-                    <li><strong>Inscribir materias:</strong> Selecciona las asignaturas para el período 2025-I.</li>
+                    <li><strong>Revisar el pensum:</strong> Consulta las materias de tu carrera.</li>
                     <li><strong>Verificar horarios:</strong> Confirma que no tengas conflictos en tus clases.</li>
-                    <li><strong>Procesar pagos:</strong> Completa el proceso de pago de matrícula y aranceles.</li>
                 </ol>
+            </div>
+
+            <!-- Información del sistema -->
+            <div class="system-info">
+                <h4><i class="fas fa-info-circle"></i> Información Importante del Sistema</h4>
+                <p><strong>Modalidad de Funcionamiento:</strong> Por los momentos, esta plataforma funciona de modo local, conectándose únicamente a la red interna de la universidad para el acceso inicial.</p>
+                <p><strong>Estado de Desarrollo:</strong> Varios módulos del sistema se encuentran actualmente en desarrollo y serán habilitados progresivamente durante el período académico.</p>
+                <p><strong>Acceso:</strong> Debes estar conectado a la red de la universidad para poder ingresar al sistema estudiantil.</p>
             </div>
 
             <!-- Botón de acceso -->
             <div class="access-button">
                 <h4><i class="fas fa-rocket"></i> ¡Comienza Tu Experiencia Universitaria!</h4>
-                <a href="https://sistema.universidad.edu.ve/login" target="_blank">
+                <a href="#" target="_blank">
                     <i class="fas fa-sign-in-alt"></i>
                     Acceder al Sistema Estudiantil
                 </a>
-                <p style="margin-top: 15px; color: #6c757d; font-size: 0.95rem;">
-                    <i class="fas fa-info-circle"></i> 
-                    Usa tu cédula como usuario y la contraseña temporal enviada por SMS
-                </p>
-            </div>
-
-            <!-- Información de soporte -->
-            <div class="support-box">
-                <h4><i class="fas fa-headset"></i> ¿Necesitas Ayuda?</h4>
-                <p>Nuestro equipo de soporte está disponible para asistirte durante todo el proceso:</p>
-                
-                <div class="support-contacts">
-                    <div class="support-item">
-                        <i class="fab fa-whatsapp"></i>
-                        <a href="https://wa.me/584121234567">WhatsApp: +58 412-123-4567</a>
-                    </div>
-                    <div class="support-item">
-                        <i class="fas fa-envelope"></i>
-                        <a href="mailto:soporte@universidad.edu.ve">soporte@universidad.edu.ve</a>
-                    </div>
-                    <div class="support-item">
-                        <i class="fas fa-phone"></i>
-                        <a href="tel:+582129876543">Teléfono: (0212) 987-6543</a>
-                    </div>
-                    <div class="support-item">
-                        <i class="fas fa-clock"></i>
-                        <span>Lunes a Viernes: 8:00 AM - 6:00 PM</span>
-                    </div>
-                </div>
             </div>
 
             <div class="email-body">
@@ -613,14 +584,14 @@
         <div class="email-footer">
             <div class="footer-welcome">
                 <h4><i class="fas fa-heart"></i> ¡Bienvenido/a a la Familia Universitaria!</h4>
-                <p>Comprometidos con tu formación integral y tu futuro profesional</p>
+                <p>Comprometidos con tu formación y tu futuro profesional</p>
             </div>
 
             <div class="contact-info">
-                <h4><i class="fas fa-university"></i> Universidad UPT</h4>
+                <h4><i class="fas fa-university"></i> Universidad UPT "Jose Felix Ribas"</h4>
                 <div class="contact-item">
                     <i class="fas fa-envelope"></i>
-                    <a href="mailto:info@universidad.edu.ve">info@universidad.edu.ve</a>
+                    <a href="mailto:info@universidad.edu.ve"></a>
                 </div>
                 <div class="contact-item">
                     <i class="fab fa-whatsapp"></i>
@@ -628,7 +599,9 @@
                 </div>
                 <div class="contact-item">
                     <i class="fas fa-globe"></i>
-                    <a href="https://universidad.edu.ve">www.universidad.edu.ve</a>
+                    <a href="https://universidad.edu.ve">
+
+                    </a>
                 </div>
                 <div class="contact-item">
                     <i class="fas fa-map-marker-alt"></i>
@@ -637,9 +610,9 @@
             </div>
 
             <div class="footer-disclaimer">
-                <p><strong>Universidad UPT</strong> - Formando líderes para el futuro de Venezuela.</p>
+                <p><strong>Universidad UPT "Jose Felix Ribas"</strong> - Formando líderes para el futuro de Venezuela.</p>
                 <p>Este mensaje fue enviado automáticamente. Para consultas específicas, utiliza nuestros canales oficiales de soporte.</p>
-                <p>&copy; 2025 Universidad UPT. Todos los derechos reservados.</p>
+                <p>&copy; 2025 Universidad UPT "Jose Felix Ribas". Todos los derechos reservados.</p>
             </div>
         </div>
         

@@ -125,11 +125,6 @@
   </div>
 </div>
 
-<script>
-  function cerrarModal() {
-    document.getElementById("modal-cambio-pnf").style.display = "none";
-  }
-</script>
 {% endif %}
 
 <script>
@@ -155,7 +150,7 @@
       input.name === "username" ||
       input.id === "id_username"
     ) {
-      input.placeholder = "Ejemplo: V-12345678 o 12345678";
+      input.placeholder = "Ejemplo: 12345678";
     }
     if (
       input.name === "first_name" ||
@@ -220,7 +215,7 @@
     if (input.name === "cedula" || input.id === "id_cedula") {
       input.addEventListener("blur", function () {
         const cedula = this.value.trim();
-        const cedulaRegex = /^[VE]-?\d{7,8}$/i;
+        const cedulaRegex = /^[]?\d{7,8}$/i;
 
         if (cedula && !cedulaRegex.test(cedula)) {
           this.style.borderColor = "#CF212E";
@@ -235,7 +230,7 @@
             errorMsg.style.display = "block";
             errorMsg.style.marginTop = "5px";
             errorMsg.innerHTML =
-              '<i class="fas fa-exclamation-triangle"></i> Formato: V-12345678 o E-12345678';
+              '<i class="fas fa-exclamation-triangle"></i> Formato de la cedula incorrecto, ejemplo: 12345678';
             this.parentElement.appendChild(errorMsg);
           }
         } else {
@@ -248,21 +243,83 @@
       });
     }
 
-    // Validación para teléfono venezolano
+    // Validación para teléfono venezolano codigo como 0414, 0424, 0412, 0416, 0426 y cualquiero otro código internacional
+    // aparte de ese codigo seguido del - y 7 números
     if (input.name === "telefono" || input.id === "id_telefono") {
       input.addEventListener("blur", function () {
         const telefono = this.value.trim();
-        const telefonoRegex =
-          /^0(412|414|424|416|426|212|241|243|244|245|246|247|248|249|251|252|253|254|255|256|257|258|259|261|262|263|264|265|266|267|268|269|271|272|273|274|275|276|277|278|279|281|282|283|284|285|286|287|288|289|291|292|293|294|295)\d{7}$/;
+        const telefonoRegex = /^(0412|0414|0416|0424|0426|\+\d{3})-\d{7}$/;
 
-        if (telefono && !telefonoRegex.test(telefono.replace(/[-\s]/g, ""))) {
+        if (telefono && !telefonoRegex.test(telefono)) {
           this.style.borderColor = "#CF212E";
+
+          // Crear mensaje de error si no existe
+          let errorMsg = this.parentElement.querySelector(".telefono-error");
+          if (!errorMsg) {
+            errorMsg = document.createElement("span");
+            errorMsg.className = "telefono-error";
+            errorMsg.style.color = "#CF212E";
+            errorMsg.style.fontSize = "0.8rem";
+            errorMsg.style.display = "block";
+            errorMsg.style.marginTop = "5px";
+            errorMsg.innerHTML =
+              '<i class="fas fa-exclamation-triangle"></i> Formato incorrecto, ejemplo: 0412-1234567 ';
+            this.parentElement.appendChild(errorMsg);
+          }
         } else {
           this.style.borderColor = "#e1e8ed";
+          const errorMsg = this.parentElement.querySelector(".telefono-error");
+          if (errorMsg) {
+            errorMsg.remove();
+          }
+        }
+      });
+    }
+
+    // Validar fecha de nacimiento para que solo acepte a mayores de 15 años
+    // en caso de error mostrar en la vista por debajo del campo de fecha el mensaje del error
+    if (
+      input.name === "fecha_nacimiento" ||
+      input.id === "id_fecha_nacimiento"
+    ) {
+      input.addEventListener("blur", function () {
+        const fecha = new Date(this.value);
+        const hoy = new Date();
+        const edadMinima = 15;
+        const fechaMinima = new Date(
+          hoy.getFullYear() - edadMinima,
+          hoy.getMonth(),
+          hoy.getDate()
+        );
+
+        if (fecha > fechaMinima) {
+          this.style.borderColor = "#CF212E";
+          errorMsg = document.createElement("span");
+          errorMsg.className = "fecha-error";
+          errorMsg.style.color = "#CF212E";
+          errorMsg.style.fontSize = "0.8rem";
+          errorMsg.style.display = "block";
+          errorMsg.style.marginTop = "5px";
+          errorMsg.innerHTML =
+            '<i class="fas fa-exclamation-triangle"></i> Debes ser mayor de 15 años';
+          this.parentElement.appendChild(errorMsg);
+
+          this.value = "";
+        } else {
+          this.style.borderColor = "#e1e8ed";
+          const errorMsg = this.parentElement.querySelector(".fecha-error");
+          if (errorMsg) {
+            errorMsg.remove();
+          }
         }
       });
     }
   });
+
+  // Función para cerrar el modal
+  function cerrarModal() {
+    document.getElementById("modal-cambio-pnf").style.display = "none";
+  }
 
   // Confirmación antes de enviar el formulario
   document.querySelector("form").addEventListener("submit", function (e) {
